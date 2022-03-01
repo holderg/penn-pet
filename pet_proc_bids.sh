@@ -67,9 +67,6 @@ if [[ ! -f ${outdir}/`basename ${t1Name}` ]]; then
     ln -s ${t1Name} ${outdir}/
 fi
 
-# Create grey matter mask from segmentation.
-3dcalc -a ${segName} -expr 'equals(a,2) + equals(a,4) + equals(a,5)' -overwrite -prefix ${outdir}/${id}_${mrisess}_gmmask.nii.gz
-
 # Motion-correct PET data.
 if [[ ${runMoco} -eq 1 ]]; then
     mcflirt -in ${petName} -out ${pfx}_desc-mc_pet.nii.gz -dof 6 -plots
