@@ -10,13 +10,28 @@ module load afni_openmp/20.1
 module load PETPVC/1.2.10
 module load fsl/6.0.3
 module load R/4.0
+# JSP: If we can find an alternative to copying the template and associated labels and warps from the ANTsCT container,
+# we can get rid of the singularity call.
 module load DEV/singularity
 
 # Command-line arguments.
 petName=$1 # Absolute path of BIDS-format, attentuation-corrected dynamic PET image
 t1Name=$2 # Absolute path of N4-corrected, skull-on T1 image from ANTsCT output directory
 
+# JSP: required files include:
+# petName=$1 # Absolute path of BIDS-format, attentuation-corrected dynamic PET image
+# t1Name=$2 # Absolute path of N4-corrected, skull-on T1 image from ANTsCT output directory
+# bmaskName=${t1dir}/sub-${id}_ses-${mrisess}_BrainExtractionMask.nii.gz
+# segName=${t1dir}/sub-${id}_ses-${mrisess}_BrainSegmentation.nii.gz
+# T1-template transforms:
+#   ${t1dir}/*_SubjectToTemplate1Warp.nii.gz
+#   ${t1dir}/*_SubjectToTemplate0GenericAffine.mat`
+#   ${t1dir}/*_TemplateToSubject0Warp.nii.gz
+#   ${t1dir}/*_TemplateToSubject1GenericAffine.mat`
+# Tissue probability posterior images: ${t1dir}/*Posteriors[1-6]nii.gz 
+
 # Record job ID.
+# JSP: useful for job monitoring and debugging failed jobs.
 echo "LSB job ID: ${LSB_JOBID}"
 
 # Parse command-line arguments to get working directory, subject ID, tracer, and PET/MRI session labels.
@@ -29,26 +44,33 @@ t1bn=`basename ${t1Name}`
 mrisess=`echo $t1bn | grep -oE 'ses-[^_]*' | cut -d '-' -f 2` # MRI session label
 wd=${petdir/sub-${id}\/ses-${petsess}} # Subjects directory
 scriptdir=`dirname $0` # Location of this script
+# JSP: note that output directory is specified here!
 outdir="/project/ftdc_pipeline/data/pet/sub-${id}/ses-${petsess}"
 if [[ ! -d ${outdir} ]]; then mkdir -p ${outdir}; fi
 
 # Some processing defaults
+# JSP: I don't think we'll want to alter any of these defaults, but we could allow the user to set all of these options.
 runMoco=1 # Run motion correction?
 makeSUVR=1 # Create SUVR images?
 regLab=1 # Register label images to PET data?
 doWarps=1 # Warp SUVR images to template space(s)?
 lstat=0 # Save label statistic in CSV format?
 psfwhm=4.9 # FWHM of PET camera point-spread function.
+# JSP: refRegion could also be a user-supplied option. Only cb and wm are recognized.
 refRegion="cb" # PET reference region--for now, cerebellum, can be changed to "wm".
+# JSP: adding any new partial-volume correction methods (including Shidahara et al.'s SFS-RR algorithm) will require
+# some substantial code additions that Sandy and I can help with.
 pvcMethod=("RVC" "IY") # PVC methods.
 
 # Get template info from ANTsCT container.
+# JSP: If we want to allow users to supply their own template, tempName should be a user-supplied option.
+# Here we are getting the ADNI template from the ANTsCT gear to ensure that it's the same reference used in the
+# ANTsCT stream.
 antsct=/project/ftdc_pipeline/antsct-aging-fw/antsct-aging-fw-0.3.1_0.3.3.sif
 singularity exec -B ${outdir}:/data ${antsct} cp -r /opt/template /data/ # copy template dir to PET output dir
 tempName=${outdir}/template/T_template0_BrainCerebellum.nii.gz
 
 # Define session-specific filename variables.
-## For PET:
 pfx="${outdir}/sub-${id}_ses-${petsess}_trc-${trc}"
 t1dir=`dirname ${t1Name}`
 bmaskName=${t1dir}/sub-${id}_ses-${mrisess}_BrainExtractionMask.nii.gz
@@ -68,6 +90,7 @@ if [[ ! -f ${outdir}/`basename ${t1Name}` ]]; then
 fi
 
 # Motion-correct PET data.
+# Create plot in mm and radians
 if [[ ${runMoco} -eq 1 ]]; then
     mcflirt -in ${petName} -out ${pfx}_desc-mc_pet.nii.gz -dof 6 -plots
     nvol=`fslinfo ${pfx}_desc-mc_pet.nii.gz | grep dim4 | grep -v pixdim4`
@@ -75,6 +98,8 @@ if [[ ${runMoco} -eq 1 ]]; then
     fslmaths "${pfx}_desc-mc_pet.nii.gz" -Tmean "${pfx}_desc-mean_pet.nii.gz"
 fi
 
+# JSP: Let's try some variations on these antsRegistration parameters.
+# We can assess the fit between PET and T1 at least by visual inspection--can we develop any quantitative metrics?
 # Run affine registration between PET and T1 images.
 echo "Running antsRegistration between PET and T1 images..."
 petxfm="${pfx}_desc-rigid${mrisess}_0GenericAffine.mat"
@@ -127,6 +152,8 @@ pvc_iy "${pfx}_desc-suvr${mrisess}_pet.nii.gz" "${outdir}/sub-${id}_ses-${mrises
 pvc_vc "${pfx}_desc-suvr${mrisess}_pet.nii.gz" "${pfx}_desc-RVC${mrisess}_pet.nii.gz" -x ${psfwhm} -y ${psfwhm} -z ${psfwhm}
 3dcalc -a "${bmaskName}" -b "${pfx}_desc-RVC${mrisess}_pet.nii.gz" -expr 'a*b' -overwrite -prefix "${pfx}_desc-RVC${mrisess}_pet.nii.gz"
 
+# JSP: insert code for SFS-RR partial-volume correction about here.
+
 # Warp SUVR maps to template space.
 antsApplyTransforms -d 3 -e 0 -i "${pfx}_desc-suvr${mrisess}_pet.nii.gz" -r ${tempName} -o "${pfx}_desc-suvrTemplate_pet.nii.gz" -t "${t1dir}/sub-${id}_ses-${mrisess}_SubjectToTemplate0GenericAffine.mat" -t "${t1dir}/sub-${id}_ses-${mrisess}_SubjectToTemplate1Warp.nii.gz"
 
@@ -134,6 +161,9 @@ antsApplyTransforms -d 3 -e 0 -i "${pfx}_desc-IY${mrisess}_pet.nii.gz" -r ${temp
 
 antsApplyTransforms -d 3 -e 0 -i "${pfx}_desc-RVC${mrisess}_pet.nii.gz" -r ${tempName} -o "${pfx}_desc-RVCTemplate_pet.nii.gz" -t "${t1dir}/sub-${id}_ses-${mrisess}_SubjectToTemplate0GenericAffine.mat" -t "${t1dir}/sub-${id}_ses-${mrisess}_SubjectToTemplate1Warp.nii.gz"
 
+# JSP: add warping of SFS-RR-corrected image to template space.
+
+# JSP: the code below can be replaced with a call to QuANTs; or we could run QuANTs outside of this script.
 # Get label statistics
 for metricFile in "${pfx}_desc-suvr${mrisess}_pet.nii.gz" "${pfx}_desc-IY${mrisess}_pet.nii.gz" "${pfx}_desc-RVC${mrisess}_pet.nii.gz"; do
     ${scriptdir}/lpc_lstat.R ${outdir}/template/labels/BrainCOLOR/BrainCOLORSubcortical.csv ${t1dir}/sub-${id}_ses-${mrisess}_BrainColorSubcortical.nii.gz ${metricFile} ${metricFile/_pet.nii.gz/_BrainColorSubcortical}
@@ -151,6 +181,7 @@ for metricFile in "${pfx}_desc-suvr${mrisess}_pet.nii.gz" "${pfx}_desc-IY${mrise
     done
 done
 
+# JSP: need to at least make the template directory writeable; otherwise, if the script crashes out, it can't be deleted.
 chgrp -R ftdclpc ${outdir}
 chmod -R 775 ${outdir}
 
