@@ -6,7 +6,22 @@
 
 #
 # Initial comment to check pull requests
-# 
+#
+# *** 
+# Things to work on:
+#   Should work on non-pmacs machines
+#   How to do verification - pass reference directory
+#   Output directory should not be constrained
+#   Get rid of singularity
+#
+# Flags to set parameters
+#
+# summary of procedure:
+#
+# Ants Registration between T1 and PET
+# Compute SUVR maps
+#
+
 
 # Load required software on PMACS LPC.
 module load ANTs/2.3.5
@@ -17,6 +32,35 @@ module load R/4.0
 # JSP: If we can find an alternative to copying the template and associated labels and warps from the ANTsCT container,
 # we can get rid of the singularity call.
 module load DEV/singularity
+
+# Arg processing code from https://stackoverflow.com/questions/402377/using-getopts-to-process-long-and-short-command-line-options
+
+CmdName=$(basename "$0")
+TEMP=$(getopt -o dno:v --long debug,noop,outdir:,verbose  -n "$CmdName" -- "$@")
+
+if [ $? != 0 ] ; then echo "Terminating..." >&2 ; exit 1 ; fi
+
+# Note the quotes around '$TEMP': they are essential!
+eval set -- "$TEMP"
+
+Debug=false
+Noop=false
+OutDir=
+Verbose=false
+
+while true; do
+  echo "\$1 = '$1'"
+  case "$1" in
+    -d | --debug) Debug=true; shift 1;;
+    -n | --noop) Noop=true; shift 1;;
+    -o | --outdir) OutDir=$2; shift 2;;
+    -v | --verbose) verbose=true; shift 1;;
+
+    -- ) shift; break ;;
+    * ) break ;;
+  esac
+done
+
 
 # Command-line arguments.
 petName=$1 # Absolute path of BIDS-format, attentuation-corrected dynamic PET image
@@ -50,6 +94,8 @@ wd=${petdir/sub-${id}\/ses-${petsess}} # Subjects directory
 scriptdir=`dirname $0` # Location of this script
 # JSP: note that output directory is specified here!
 outdir="/project/ftdc_pipeline/data/pet/sub-${id}/ses-${petsess}"
+if [ -n "$OutDir" ]; then outdir="$OutDir"
+
 if [[ ! -d ${outdir} ]]; then mkdir -p ${outdir}; fi
 
 # Some processing defaults
