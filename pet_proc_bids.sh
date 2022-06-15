@@ -1,10 +1,13 @@
-#!/bin/bash
+#!/bin/bash -x
 # Processes PET data to create SUVR images.
 # Follows BIDS PET standard and expects BIDS-format filenames. 
 # Note that subject and session labels cannot contain BIDS-incompatible 
 # characters like underscores or periods.
 
 #
+# debug - do not delete the temporary directory
+# verify - check output and intermediate files with previous intermediate directory
+# outdir - where to stor
 # Initial comment to check pull requests
 #
 # *** 
@@ -22,6 +25,7 @@
 # Compute SUVR maps
 #
 
+export PATH="$PATH:/project/bsc/shared/bin"
 
 # Load required software on PMACS LPC.
 module load ANTs/2.3.5
@@ -33,10 +37,37 @@ module load R/4.0
 # we can get rid of the singularity call.
 module load DEV/singularity
 
+function ValidateNifiDirs () {
+	local D1="$1"
+	local D2="$2"
+
+	local DifferentFiles=()
+
+	for f1 in "$D1"/*.nii.gz
+	do
+		bn=$(basename "$f1")
+		f2="${D2}/${bn}"
+
+		if ! niimatch3.sh -q "$f1"  "$f2"
+		then
+			DifferentFiles+=("${f1} != ${f2}
+")
+		fi
+	done
+	if [ "${#DifferentFiles[@]}" -gt 0 ]
+	then
+		echo "${DifferentFiles[@]}" 1>&2
+		return 1
+	fi
+
+	return 0
+
+}
+
 # Arg processing code from https://stackoverflow.com/questions/402377/using-getopts-to-process-long-and-short-command-line-options
 
 CmdName=$(basename "$0")
-TEMP=$(getopt -o dno:v --long debug,noop,outdir:,verbose  -n "$CmdName" -- "$@")
+TEMP=$(getopt -o dno:V:v --long debug,noop,outdir:,ValidateDir:,verbose  -n "$CmdName" -- "$@")
 
 if [ $? != 0 ] ; then echo "Terminating..." >&2 ; exit 1 ; fi
 
@@ -54,6 +85,7 @@ while true; do
     -d | --debug) Debug=true; shift 1;;
     -n | --noop) Noop=true; shift 1;;
     -o | --outdir) OutDir=$2; shift 2;;
+    -V | --ValidateDir) ValidateDir=$2; shift 2;;
     -v | --verbose) verbose=true; shift 1;;
 
     -- ) shift; break ;;
@@ -94,7 +126,17 @@ wd=${petdir/sub-${id}\/ses-${petsess}} # Subjects directory
 scriptdir=`dirname $0` # Location of this script
 # JSP: note that output directory is specified here!
 outdir="/project/ftdc_pipeline/data/pet/sub-${id}/ses-${petsess}"
-if [ -n "$OutDir" ]; then outdir="$OutDir"
+if [ -n "$OutDir" ]
+then
+	outdir=$(echo "$OutDir" | sed "s/%J/${LSB_JOBID}/g")
+fi
+
+echo "outdir = '$outdir'" 1>&2
+
+echo "ValidateDir = '$ValidateDir'" 1>&2
+
+ValidateNifiDirs "$ValidateDir" /tmp/validate
+exit
 
 if [[ ! -d ${outdir} ]]; then mkdir -p ${outdir}; fi
 
@@ -235,4 +277,10 @@ done
 chgrp -R ftdclpc ${outdir}
 chmod -R 775 ${outdir}
 
-rm -r ${outdir}/template
+if [ -z "$Debug" ]
+then
+	rm -r "${outdir}/template"
+else
+	echo  "${outdir}/template" 1>&2
+fi
+
