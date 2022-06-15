@@ -5,14 +5,23 @@
 
 infile=${1}
 
+BaseDir=.
+if $(echo "$0" | grep -q /)
+then
+	BaseDir=$(echo "$0" | sed 's,/[^/]*$,,')
+fi
+
+export BaseDir
+
+
 cat ${infile} | while IFS="," read f t1; do
 	fbase=`basename ${f}`
 	fp=(${fbase//_/\ })
 	subj=${fp[0]}
 	petsess=${fp[1]}
-	wd=/project/ftdc_pipeline/data/pet/${subj}/${petsess}
+	wd="${BaseDir}/data/pet/${subj}/${petsess}"
 	if [[ ! -d ${wd} ]]; then mkdir -p ${wd}; fi
-	cmd="bsub -J pet_proc_${subj}_${petsess} -o ${wd}/%J.stdout -e ${wd}/%J.stderr /project/ftdc_pet/PET/scripts/pet_proc_bids.sh ${f} ${t1}"
+	cmd="bsub -J pet_proc_${subj}_${petsess} -o ${wd}/%J.stdout -e ${wd}/%J.stderr ${BaseDir}/pet_proc_bids.sh ${f} ${t1}"
 	echo $cmd
 	$cmd
 done
