@@ -1,0 +1,984 @@
+{
+  "Name": "Tian_Subcortex_S2_3T",
+  "Identifier": "Tian_Subcortex_S2_3T",
+  "Filename": "Tian_Subcortex_S2_3T_2009cAsym.nii.gz",
+  "Version": "1",
+  "Release": "1",
+  "Git-Repo": "",
+  "Git-Commit": "",
+  "Description": "",
+  "DevNotes": [
+    ""
+  ],
+  "QuantsVersion": "1.0",
+  "BIDSVersion": "1.0",
+  "TemplateSpace": "MNI152NLin2009cAsym",
+  "Species": "Homo sapiens",
+  "Authors": "",
+  "Maintainers": "",
+  "ReferenceAndLinks": [
+    "https://doi.org/10.1093/cercor/bhx179"
+  ],
+  "License": "",
+  "Domains": [
+    "Volume",
+    "Cortical",
+    "Functional",
+    "Connectivity"
+  ],
+  "Groups": [
+    {
+      "Name": "Hemisphere",
+      "Values": [
+        {
+          "Name": "left",
+          "Abbreviation": "lr"
+        },
+        {
+          "Name": "right",
+          "Abbreviation": "rh"
+        },
+        {
+          "Name": "none",
+          "Abbreviation": "none"
+        }
+      ]
+    },
+    {
+      "Name": "Tissue",
+      "Values": [
+        {
+          "Name": "Other",
+          "Abbreviation": "OTHER",
+          "GroupID": 0
+        },
+        {
+          "Name": "CorticalSpinalFluid",
+          "Abbreviation": "CSF",
+          "GroupID": 1
+        },
+        {
+          "Name": "CorticalGrayMatter",
+          "Abbreviation": "CGM",
+          "GroupID": 2
+        },
+        {
+          "Name": "WhiteMatter",
+          "Abbreviation": "WM",
+          "GroupID": 3
+        },
+        {
+          "Name": "SubcorticalGrayMatter",
+          "Abbreviation": "SCGM",
+          "GroupID": 4
+        },
+        {
+          "Name": "Brainstem",
+          "Abbreviation": "GS",
+          "GroupID": 5
+        },
+        {
+          "Name": "Cerebellum",
+          "Abbreviation": "CBM",
+          "GroupID": 6
+        }
+      ]
+    }
+  ],
+  "Regions": [
+    {
+      "Name": "amygdala",
+      "Abbreviation": "AMY"
+    },
+    {
+      "Name": "caudate",
+      "Abbreviation": "CAU"
+    },
+    {
+      "Name": "globus pallidus",
+      "Abbreviation": "GP"
+    },
+    {
+      "Name": "hippocampus",
+      "Abbreviation": "HIP"
+    },
+    {
+      "Name": "nucleus accumbens",
+      "Abbreviation": "NAc"
+    },
+    {
+      "Name": "putamen",
+      "Abbreviation": "PUT"
+    },
+    {
+      "Name": "thalamus",
+      "Abbreviation": "THA"
+    }
+  ],
+  "ROI": [
+    {
+      "Name": "aHIP-rh",
+      "ImageID": 1,
+      "Groups": [
+        {
+          "Name": "Hemisphere",
+          "Value": "right"
+        },
+        {
+          "Name": "Tissue",
+          "Value": "SubcorticalGrayMatter"
+        },
+        {
+          "Name": "Region",
+          "Value": "hippocampus"
+        }
+      ],
+      "Masking": {
+        "Group": "Tissue",
+        "Include": [
+          "CorticalGrayMatter",
+          "SubcorticalGrayMatter",
+          "Brainstem",
+          "Cerebellum"
+        ]
+      }
+    },
+    {
+      "Name": "pHIP-rh",
+      "ImageID": 2,
+      "Groups": [
+        {
+          "Name": "Hemisphere",
+          "Value": "right"
+        },
+        {
+          "Name": "Tissue",
+          "Value": "SubcorticalGrayMatter"
+        },
+        {
+          "Name": "Region",
+          "Value": "hippocampus"
+        }
+      ],
+      "Masking": {
+        "Group": "Tissue",
+        "Include": [
+          "CorticalGrayMatter",
+          "SubcorticalGrayMatter",
+          "Brainstem",
+          "Cerebellum"
+        ]
+      }
+    },
+    {
+      "Name": "lAMY-rh",
+      "ImageID": 3,
+      "Groups": [
+        {
+          "Name": "Hemisphere",
+          "Value": "right"
+        },
+        {
+          "Name": "Tissue",
+          "Value": "SubcorticalGrayMatter"
+        },
+        {
+          "Name": "Region",
+          "Value": "amygdala"
+        }
+      ],
+      "Masking": {
+        "Group": "Tissue",
+        "Include": [
+          "CorticalGrayMatter",
+          "SubcorticalGrayMatter",
+          "Brainstem",
+          "Cerebellum"
+        ]
+      }
+    },
+    {
+      "Name": "mAMY-rh",
+      "ImageID": 4,
+      "Groups": [
+        {
+          "Name": "Hemisphere",
+          "Value": "right"
+        },
+        {
+          "Name": "Tissue",
+          "Value": "SubcorticalGrayMatter"
+        },
+        {
+          "Name": "Region",
+          "Value": "amygdala"
+        }
+      ],
+      "Masking": {
+        "Group": "Tissue",
+        "Include": [
+          "CorticalGrayMatter",
+          "SubcorticalGrayMatter",
+          "Brainstem",
+          "Cerebellum"
+        ]
+      }
+    },
+    {
+      "Name": "THA-DP-rh",
+      "ImageID": 5,
+      "Groups": [
+        {
+          "Name": "Hemisphere",
+          "Value": "right"
+        },
+        {
+          "Name": "Tissue",
+          "Value": "SubcorticalGrayMatter"
+        },
+        {
+          "Name": "Region",
+          "Value": "thalamus"
+        }
+      ],
+      "Masking": {
+        "Group": "Tissue",
+        "Include": [
+          "CorticalGrayMatter",
+          "SubcorticalGrayMatter",
+          "Brainstem",
+          "Cerebellum"
+        ]
+      }
+    },
+    {
+      "Name": "THA-VP-rh",
+      "ImageID": 6,
+      "Groups": [
+        {
+          "Name": "Hemisphere",
+          "Value": "right"
+        },
+        {
+          "Name": "Tissue",
+          "Value": "SubcorticalGrayMatter"
+        },
+        {
+          "Name": "Region",
+          "Value": "thalamus"
+        }
+      ],
+      "Masking": {
+        "Group": "Tissue",
+        "Include": [
+          "CorticalGrayMatter",
+          "SubcorticalGrayMatter",
+          "Brainstem",
+          "Cerebellum"
+        ]
+      }
+    },
+    {
+      "Name": "THA-VA-rh",
+      "ImageID": 7,
+      "Groups": [
+        {
+          "Name": "Hemisphere",
+          "Value": "right"
+        },
+        {
+          "Name": "Tissue",
+          "Value": "SubcorticalGrayMatter"
+        },
+        {
+          "Name": "Region",
+          "Value": "thalamus"
+        }
+      ],
+      "Masking": {
+        "Group": "Tissue",
+        "Include": [
+          "CorticalGrayMatter",
+          "SubcorticalGrayMatter",
+          "Brainstem",
+          "Cerebellum"
+        ]
+      }
+    },
+    {
+      "Name": "THA-DA-rh",
+      "ImageID": 8,
+      "Groups": [
+        {
+          "Name": "Hemisphere",
+          "Value": "right"
+        },
+        {
+          "Name": "Tissue",
+          "Value": "SubcorticalGrayMatter"
+        },
+        {
+          "Name": "Region",
+          "Value": "thalamus"
+        }
+      ],
+      "Masking": {
+        "Group": "Tissue",
+        "Include": [
+          "CorticalGrayMatter",
+          "SubcorticalGrayMatter",
+          "Brainstem",
+          "Cerebellum"
+        ]
+      }
+    },
+    {
+      "Name": "NAc-shell-rh",
+      "ImageID": 9,
+      "Groups": [
+        {
+          "Name": "Hemisphere",
+          "Value": "right"
+        },
+        {
+          "Name": "Tissue",
+          "Value": "SubcorticalGrayMatter"
+        },
+        {
+          "Name": "Region",
+          "Value": "nucleus accumbens"
+        }
+      ],
+      "Masking": {
+        "Group": "Tissue",
+        "Include": [
+          "CorticalGrayMatter",
+          "SubcorticalGrayMatter",
+          "Brainstem",
+          "Cerebellum"
+        ]
+      }
+    },
+    {
+      "Name": "NAc-core-rh",
+      "ImageID": 10,
+      "Groups": [
+        {
+          "Name": "Hemisphere",
+          "Value": "right"
+        },
+        {
+          "Name": "Tissue",
+          "Value": "SubcorticalGrayMatter"
+        },
+        {
+          "Name": "Region",
+          "Value": "nucleus accumbens"
+        }
+      ],
+      "Masking": {
+        "Group": "Tissue",
+        "Include": [
+          "CorticalGrayMatter",
+          "SubcorticalGrayMatter",
+          "Brainstem",
+          "Cerebellum"
+        ]
+      }
+    },
+    {
+      "Name": "pGP-rh",
+      "ImageID": 11,
+      "Groups": [
+        {
+          "Name": "Hemisphere",
+          "Value": "right"
+        },
+        {
+          "Name": "Tissue",
+          "Value": "SubcorticalGrayMatter"
+        },
+        {
+          "Name": "Region",
+          "Value": "globus pallidus"
+        }
+      ],
+      "Masking": {
+        "Group": "Tissue",
+        "Include": [
+          "CorticalGrayMatter",
+          "SubcorticalGrayMatter",
+          "Brainstem",
+          "Cerebellum"
+        ]
+      }
+    },
+    {
+      "Name": "aGP-rh",
+      "ImageID": 12,
+      "Groups": [
+        {
+          "Name": "Hemisphere",
+          "Value": "right"
+        },
+        {
+          "Name": "Tissue",
+          "Value": "SubcorticalGrayMatter"
+        },
+        {
+          "Name": "Region",
+          "Value": "globus pallidus"
+        }
+      ],
+      "Masking": {
+        "Group": "Tissue",
+        "Include": [
+          "CorticalGrayMatter",
+          "SubcorticalGrayMatter",
+          "Brainstem",
+          "Cerebellum"
+        ]
+      }
+    },
+    {
+      "Name": "aPUT-rh",
+      "ImageID": 13,
+      "Groups": [
+        {
+          "Name": "Hemisphere",
+          "Value": "right"
+        },
+        {
+          "Name": "Tissue",
+          "Value": "SubcorticalGrayMatter"
+        },
+        {
+          "Name": "Region",
+          "Value": "putamen"
+        }
+      ],
+      "Masking": {
+        "Group": "Tissue",
+        "Include": [
+          "CorticalGrayMatter",
+          "SubcorticalGrayMatter",
+          "Brainstem",
+          "Cerebellum"
+        ]
+      }
+    },
+    {
+      "Name": "pPUT-rh",
+      "ImageID": 14,
+      "Groups": [
+        {
+          "Name": "Hemisphere",
+          "Value": "right"
+        },
+        {
+          "Name": "Tissue",
+          "Value": "SubcorticalGrayMatter"
+        },
+        {
+          "Name": "Region",
+          "Value": "putamen"
+        }
+      ],
+      "Masking": {
+        "Group": "Tissue",
+        "Include": [
+          "CorticalGrayMatter",
+          "SubcorticalGrayMatter",
+          "Brainstem",
+          "Cerebellum"
+        ]
+      }
+    },
+    {
+      "Name": "aCAU-rh",
+      "ImageID": 15,
+      "Groups": [
+        {
+          "Name": "Hemisphere",
+          "Value": "right"
+        },
+        {
+          "Name": "Tissue",
+          "Value": "SubcorticalGrayMatter"
+        },
+        {
+          "Name": "Region",
+          "Value": "caudate"
+        }
+      ],
+      "Masking": {
+        "Group": "Tissue",
+        "Include": [
+          "CorticalGrayMatter",
+          "SubcorticalGrayMatter",
+          "Brainstem",
+          "Cerebellum"
+        ]
+      }
+    },
+    {
+      "Name": "pCAU-rh",
+      "ImageID": 16,
+      "Groups": [
+        {
+          "Name": "Hemisphere",
+          "Value": "right"
+        },
+        {
+          "Name": "Tissue",
+          "Value": "SubcorticalGrayMatter"
+        },
+        {
+          "Name": "Region",
+          "Value": "caudate"
+        }
+      ],
+      "Masking": {
+        "Group": "Tissue",
+        "Include": [
+          "CorticalGrayMatter",
+          "SubcorticalGrayMatter",
+          "Brainstem",
+          "Cerebellum"
+        ]
+      }
+    },
+    {
+      "Name": "aHIP-lh",
+      "ImageID": 17,
+      "Groups": [
+        {
+          "Name": "Hemisphere",
+          "Value": "left"
+        },
+        {
+          "Name": "Tissue",
+          "Value": "SubcorticalGrayMatter"
+        },
+        {
+          "Name": "Region",
+          "Value": "hippocampus"
+        }
+      ],
+      "Masking": {
+        "Group": "Tissue",
+        "Include": [
+          "CorticalGrayMatter",
+          "SubcorticalGrayMatter",
+          "Brainstem",
+          "Cerebellum"
+        ]
+      }
+    },
+    {
+      "Name": "pHIP-lh",
+      "ImageID": 18,
+      "Groups": [
+        {
+          "Name": "Hemisphere",
+          "Value": "left"
+        },
+        {
+          "Name": "Tissue",
+          "Value": "SubcorticalGrayMatter"
+        },
+        {
+          "Name": "Region",
+          "Value": "hippocampus"
+        }
+      ],
+      "Masking": {
+        "Group": "Tissue",
+        "Include": [
+          "CorticalGrayMatter",
+          "SubcorticalGrayMatter",
+          "Brainstem",
+          "Cerebellum"
+        ]
+      }
+    },
+    {
+      "Name": "lAMY-lh",
+      "ImageID": 19,
+      "Groups": [
+        {
+          "Name": "Hemisphere",
+          "Value": "left"
+        },
+        {
+          "Name": "Tissue",
+          "Value": "SubcorticalGrayMatter"
+        },
+        {
+          "Name": "Region",
+          "Value": "amygdala"
+        }
+      ],
+      "Masking": {
+        "Group": "Tissue",
+        "Include": [
+          "CorticalGrayMatter",
+          "SubcorticalGrayMatter",
+          "Brainstem",
+          "Cerebellum"
+        ]
+      }
+    },
+    {
+      "Name": "mAMY-lh",
+      "ImageID": 20,
+      "Groups": [
+        {
+          "Name": "Hemisphere",
+          "Value": "left"
+        },
+        {
+          "Name": "Tissue",
+          "Value": "SubcorticalGrayMatter"
+        },
+        {
+          "Name": "Region",
+          "Value": "amygdala"
+        }
+      ],
+      "Masking": {
+        "Group": "Tissue",
+        "Include": [
+          "CorticalGrayMatter",
+          "SubcorticalGrayMatter",
+          "Brainstem",
+          "Cerebellum"
+        ]
+      }
+    },
+    {
+      "Name": "THA-DP-lh",
+      "ImageID": 21,
+      "Groups": [
+        {
+          "Name": "Hemisphere",
+          "Value": "left"
+        },
+        {
+          "Name": "Tissue",
+          "Value": "SubcorticalGrayMatter"
+        },
+        {
+          "Name": "Region",
+          "Value": "thalamus"
+        }
+      ],
+      "Masking": {
+        "Group": "Tissue",
+        "Include": [
+          "CorticalGrayMatter",
+          "SubcorticalGrayMatter",
+          "Brainstem",
+          "Cerebellum"
+        ]
+      }
+    },
+    {
+      "Name": "THA-VP-lh",
+      "ImageID": 22,
+      "Groups": [
+        {
+          "Name": "Hemisphere",
+          "Value": "left"
+        },
+        {
+          "Name": "Tissue",
+          "Value": "SubcorticalGrayMatter"
+        },
+        {
+          "Name": "Region",
+          "Value": "thalamus"
+        }
+      ],
+      "Masking": {
+        "Group": "Tissue",
+        "Include": [
+          "CorticalGrayMatter",
+          "SubcorticalGrayMatter",
+          "Brainstem",
+          "Cerebellum"
+        ]
+      }
+    },
+    {
+      "Name": "THA-VA-lh",
+      "ImageID": 23,
+      "Groups": [
+        {
+          "Name": "Hemisphere",
+          "Value": "left"
+        },
+        {
+          "Name": "Tissue",
+          "Value": "SubcorticalGrayMatter"
+        },
+        {
+          "Name": "Region",
+          "Value": "thalamus"
+        }
+      ],
+      "Masking": {
+        "Group": "Tissue",
+        "Include": [
+          "CorticalGrayMatter",
+          "SubcorticalGrayMatter",
+          "Brainstem",
+          "Cerebellum"
+        ]
+      }
+    },
+    {
+      "Name": "THA-DA-lh",
+      "ImageID": 24,
+      "Groups": [
+        {
+          "Name": "Hemisphere",
+          "Value": "left"
+        },
+        {
+          "Name": "Tissue",
+          "Value": "SubcorticalGrayMatter"
+        },
+        {
+          "Name": "Region",
+          "Value": "thalamus"
+        }
+      ],
+      "Masking": {
+        "Group": "Tissue",
+        "Include": [
+          "CorticalGrayMatter",
+          "SubcorticalGrayMatter",
+          "Brainstem",
+          "Cerebellum"
+        ]
+      }
+    },
+    {
+      "Name": "NAc-shell-lh",
+      "ImageID": 25,
+      "Groups": [
+        {
+          "Name": "Hemisphere",
+          "Value": "left"
+        },
+        {
+          "Name": "Tissue",
+          "Value": "SubcorticalGrayMatter"
+        },
+        {
+          "Name": "Region",
+          "Value": "nucleus accumbens"
+        }
+      ],
+      "Masking": {
+        "Group": "Tissue",
+        "Include": [
+          "CorticalGrayMatter",
+          "SubcorticalGrayMatter",
+          "Brainstem",
+          "Cerebellum"
+        ]
+      }
+    },
+    {
+      "Name": "NAc-core-lh",
+      "ImageID": 26,
+      "Groups": [
+        {
+          "Name": "Hemisphere",
+          "Value": "left"
+        },
+        {
+          "Name": "Tissue",
+          "Value": "SubcorticalGrayMatter"
+        },
+        {
+          "Name": "Region",
+          "Value": "nucleus accumbens"
+        }
+      ],
+      "Masking": {
+        "Group": "Tissue",
+        "Include": [
+          "CorticalGrayMatter",
+          "SubcorticalGrayMatter",
+          "Brainstem",
+          "Cerebellum"
+        ]
+      }
+    },
+    {
+      "Name": "pGP-lh",
+      "ImageID": 27,
+      "Groups": [
+        {
+          "Name": "Hemisphere",
+          "Value": "left"
+        },
+        {
+          "Name": "Tissue",
+          "Value": "SubcorticalGrayMatter"
+        },
+        {
+          "Name": "Region",
+          "Value": "globus pallidus"
+        }
+      ],
+      "Masking": {
+        "Group": "Tissue",
+        "Include": [
+          "CorticalGrayMatter",
+          "SubcorticalGrayMatter",
+          "Brainstem",
+          "Cerebellum"
+        ]
+      }
+    },
+    {
+      "Name": "aGP-lh",
+      "ImageID": 28,
+      "Groups": [
+        {
+          "Name": "Hemisphere",
+          "Value": "left"
+        },
+        {
+          "Name": "Tissue",
+          "Value": "SubcorticalGrayMatter"
+        },
+        {
+          "Name": "Region",
+          "Value": "globus pallidus"
+        }
+      ],
+      "Masking": {
+        "Group": "Tissue",
+        "Include": [
+          "CorticalGrayMatter",
+          "SubcorticalGrayMatter",
+          "Brainstem",
+          "Cerebellum"
+        ]
+      }
+    },
+    {
+      "Name": "aPUT-lh",
+      "ImageID": 29,
+      "Groups": [
+        {
+          "Name": "Hemisphere",
+          "Value": "left"
+        },
+        {
+          "Name": "Tissue",
+          "Value": "SubcorticalGrayMatter"
+        },
+        {
+          "Name": "Region",
+          "Value": "putamen"
+        }
+      ],
+      "Masking": {
+        "Group": "Tissue",
+        "Include": [
+          "CorticalGrayMatter",
+          "SubcorticalGrayMatter",
+          "Brainstem",
+          "Cerebellum"
+        ]
+      }
+    },
+    {
+      "Name": "pPUT-lh",
+      "ImageID": 30,
+      "Groups": [
+        {
+          "Name": "Hemisphere",
+          "Value": "left"
+        },
+        {
+          "Name": "Tissue",
+          "Value": "SubcorticalGrayMatter"
+        },
+        {
+          "Name": "Region",
+          "Value": "putamen"
+        }
+      ],
+      "Masking": {
+        "Group": "Tissue",
+        "Include": [
+          "CorticalGrayMatter",
+          "SubcorticalGrayMatter",
+          "Brainstem",
+          "Cerebellum"
+        ]
+      }
+    },
+    {
+      "Name": "aCAU-lh",
+      "ImageID": 31,
+      "Groups": [
+        {
+          "Name": "Hemisphere",
+          "Value": "left"
+        },
+        {
+          "Name": "Tissue",
+          "Value": "SubcorticalGrayMatter"
+        },
+        {
+          "Name": "Region",
+          "Value": "caudate"
+        }
+      ],
+      "Masking": {
+        "Group": "Tissue",
+        "Include": [
+          "CorticalGrayMatter",
+          "SubcorticalGrayMatter",
+          "Brainstem",
+          "Cerebellum"
+        ]
+      }
+    },
+    {
+      "Name": "pCAU-lh",
+      "ImageID": 32,
+      "Groups": [
+        {
+          "Name": "Hemisphere",
+          "Value": "left"
+        },
+        {
+          "Name": "Tissue",
+          "Value": "SubcorticalGrayMatter"
+        },
+        {
+          "Name": "Region",
+          "Value": "caudate"
+        }
+      ],
+      "Masking": {
+        "Group": "Tissue",
+        "Include": [
+          "CorticalGrayMatter",
+          "SubcorticalGrayMatter",
+          "Brainstem",
+          "Cerebellum"
+        ]
+      }
+    }
+  ]
+}

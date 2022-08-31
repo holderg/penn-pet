@@ -1,0 +1,169 @@
+{
+  "Name": "AntsSegmentation",
+  "Identifier": "AntsSegmentation",
+  "Filename": "*_BrainSegmentation.nii.gz",
+  "Version": "1",
+  "Release": "1",
+  "Git-Repo": "",
+  "Git-Commit": "",
+  "Description": "",
+  "DevNotes": [
+    ""
+  ],
+  "QuantsVersion": "1.0",
+  "BIDSVersion": "1.0",
+  "TemplateSpace": "NATIVE",
+  "Species": "Homo sapiens",
+  "Authors": "",
+  "Maintainers": "",
+  "ReferenceAndLinks": [
+    "https://doi.org/10.1093/cercor/bhx179"
+  ],
+  "License": "",
+  "Domains": [
+    "Volume",
+    "Cortical",
+    "Functional",
+    "Connectivity"
+  ],
+  "Groups": [
+    {
+      "Name": "Tissue",
+      "Values": [
+        {
+          "Name": "Other",
+          "Abbreviation": "OTHER",
+          "GroupID": 0
+        },
+        {
+          "Name": "CorticalSpinalFluid",
+          "Abbreviation": "CSF",
+          "GroupID": 1
+        },
+        {
+          "Name": "CorticalGrayMatter",
+          "Abbreviation": "CGM",
+          "GroupID": 2
+        },
+        {
+          "Name": "WhiteMatter",
+          "Abbreviation": "WM",
+          "GroupID": 3
+        },
+        {
+          "Name": "SubcorticalGrayMatter",
+          "Abbreviation": "SCGM",
+          "GroupID": 4
+        },
+        {
+          "Name": "Brainstem",
+          "Abbreviation": "BS",
+          "GroupID": 5
+        },
+        {
+          "Name": "Cerebellum",
+          "Abbreviation": "CBM",
+          "GroupID": 6
+        }
+      ]
+    }
+  ],
+  "ROI": [
+    {
+      "Name": "CorticalSpinalFluid",
+      "ImageID": 1,
+      "Groups": [
+        {
+          "Name": "Tissue",
+          "Value": "CorticalSpinalFluid"
+        }
+      ],
+      "Masking": {
+        "Group": "Tissue",
+        "Include": [
+          "CorticalSpinalFluid"
+        ]
+      }
+    },
+    {
+      "Name": "CorticalGrayMatter",
+      "ImageID": 2,
+      "Groups": [
+        {
+          "Name": "Tissue",
+          "Value": "CorticalGrayMatter"
+        }
+      ],
+      "Masking": {
+        "Group": "Tissue",
+        "Include": [
+          "CorticalGrayMatter"
+        ]
+      }
+    },
+    {
+      "Name": "WhiteMatter",
+      "ImageID": 3,
+      "Groups": [
+        {
+          "Name": "Tissue",
+          "Value": "WhiteMatter"
+        }
+      ],
+      "Masking": {
+        "Group": "Tissue",
+        "Include": [
+          "WhiteMatter"
+        ]
+      }
+    },
+    {
+      "Name": "SubcorticalGrayMatter",
+      "ImageID": 4,
+      "Groups": [
+        {
+          "Name": "Tissue",
+          "Value": "SubcorticalGrayMatter"
+        }
+      ],
+      "Masking": {
+        "Group": "Tissue",
+        "Include": [
+          "SubcorticalGrayMatter"
+        ]
+      }
+    },
+    {
+      "Name": "Brainstem",
+      "ImageID": 5,
+      "Groups": [
+        {
+          "Name": "Tissue",
+          "Value": "Brainstem"
+        }
+      ],
+      "Masking": {
+        "Group": "Tissue",
+        "Include": [
+          "Brainstem"
+        ]
+      }
+    },
+    {
+      "Name": "Cerebellum",
+      "ImageID": 6,
+      "Groups": [
+        {
+          "Name": "Tissue",
+          "Value": "Cerebellum"
+        }
+      ],
+      "Masking": {
+        "Group": "Tissue",
+        "Include": [
+          "Cerebellum"
+        ]
+      }
+    }
+  ]
+}

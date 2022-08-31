@@ -1,0 +1,83 @@
+{
+  "Name": "AntsBrain",
+  "Identifier": "AntsBrain",
+  "Filename": "*_BrainExtractionMask.nii.gz",
+  "Version": "1",
+  "Release": "1",
+  "Git-Repo": "",
+  "Git-Commit": "",
+  "Description": "",
+  "DevNotes": [
+    ""
+  ],
+  "QuantsVersion": "1.0",
+  "BIDSVersion": "1.0",
+  "TemplateSpace": "NATIVE",
+  "Species": "Homo sapiens",
+  "Authors": "",
+  "Maintainers": "",
+  "ReferenceAndLinks": [
+    "https://doi.org/10.1093/cercor/bhx179"
+  ],
+  "License": "",
+  "Domains": [
+    "Volume",
+    "Cortical",
+    "Functional",
+    "Connectivity"
+  ],
+  "Groups": [
+    {
+      "Name": "Tissue",
+      "Values": [
+        {
+          "Name": "Other",
+          "Abbreviation": "OTHER",
+          "GroupID": 0
+        },
+        {
+          "Name": "CorticalSpinalFluid",
+          "Abbreviation": "CSF",
+          "GroupID": 1
+        },
+        {
+          "Name": "CorticalGrayMatter",
+          "Abbreviation": "CGM",
+          "GroupID": 2
+        },
+        {
+          "Name": "WhiteMatter",
+          "Abbreviation": "WM",
+          "GroupID": 3
+        },
+        {
+          "Name": "SubcorticalGrayMatter",
+          "Abbreviation": "SCGM",
+          "GroupID": 4
+        },
+        {
+          "Name": "Brainstem",
+          "Abbreviation": "BS",
+          "GroupID": 5
+        },
+        {
+          "Name": "Cerebellum",
+          "Abbreviation": "CBM",
+          "GroupID": 6
+        }
+      ]
+    }
+  ],
+  "ROI": [
+    {
+      "Name": "Brain",
+      "ImageID": 1,
+      "Groups": [
+        {
+          "Name": "Tissue",
+          "Value": "Other"
+        }
+      ]
+    }
+  ]
+}
