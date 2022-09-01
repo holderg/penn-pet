@@ -13,7 +13,7 @@ module load ANTs/2.3.5
 module load afni_openmp/20.1
 module load PETPVC/1.2.10
 module load fsl/6.0.3
-module load R/4.0
+
 # JSP: If we can find an alternative to copying the template and associated labels and warps from the ANTsCT container,
 # we can get rid of the singularity call.
 module load DEV/singularity
