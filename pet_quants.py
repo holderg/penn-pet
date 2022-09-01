@@ -4,8 +4,7 @@
     
     Command-line arguments:
     
-    1. petDir: directory with output from PET processing T1-space SUVR image. Filename must match
-       the pattern "*desc-suvr2*pet.nii.gz", e.g., 
+    1. petFile: full path to T1-space SUVR image. Filename should be in BIDS format, e.g.,
        "sub-123456_ses-20220101x1200_trc-AV1451_desc-suvr20220102x1330_pet.nii.gz", where "20220102x1330" is the
        label for the MRI session in which the T1w image was acquired.
     2. antsDir: ANTs Cortical Thickness output for T1w image to which the PET was registered.
@@ -31,8 +30,9 @@ import sys
 import json
 import glob
 
+petFile = sys.argv[1]
 # This is the single session PET output directory.
-petDir = sys.argv[1]
+petDir = os.path.dirname(petFile)
 # ANTsCT output directory. Does this take the place of networkDir?
 antsDir = sys.argv[2]
 # Why needed? Supply correct path.
@@ -51,8 +51,8 @@ def parsePath( path ):
     return((id,ses))
 
 # Create a custom method for getting both PET and ANTsCT files as input.
-def getInputs(petDir,antsDir):
-    suffix = {"suvr": os.path.join(petDir,"*desc-suvr2*pet.nii.gz"),
+def getInputs(petFile,antsDir):
+    suffix = {"suvr": petFile),
         "t1": os.path.join(antsDir,"*ExtractedBrain0N4.nii.gz"),
         "mask": os.path.join(antsDir,"*BrainExtractionMask.nii.gz"),
         "seg": os.path.join(antsDir,"*BrainSegmentation.nii.gz"),
@@ -83,7 +83,7 @@ q.SetTemplate(templateDef, templateDir)
 
 # Read in input files. Have to create a custom function that will replace getFTDCInputs
 # and read in both PET and ANTsCT files needed.
-inputFiles =  getInputs(petDir, antsDir)
+inputFiles =  getInputs(petFile, antsDir)
 print("input files: ", inputFiles)
 inputImgs = {}
 for tag in inputFiles.keys():

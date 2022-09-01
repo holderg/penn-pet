@@ -167,22 +167,9 @@ antsApplyTransforms -d 3 -e 0 -i "${pfx}_desc-RVC${mrisess}_pet.nii.gz" -r ${tem
 
 # JSP: add warping of SFS-RR-corrected image to template space.
 
-# JSP: the code below can be replaced with a call to QuANTs; or we could run QuANTs outside of this script.
-# Get label statistics
+# Get label statistics for multiple atlases using QuANTs.
 for metricFile in "${pfx}_desc-suvr${mrisess}_pet.nii.gz" "${pfx}_desc-IY${mrisess}_pet.nii.gz" "${pfx}_desc-RVC${mrisess}_pet.nii.gz"; do
-    ${scriptdir}/lpc_lstat.R ${outdir}/template/labels/BrainCOLOR/BrainCOLORSubcortical.csv ${t1dir}/sub-${id}_ses-${mrisess}_BrainColorSubcortical.nii.gz ${metricFile} ${metricFile/_pet.nii.gz/_BrainColorSubcortical}
-    echo $metricFile ${t1dir}/sub-${id}_ses-${mrisess}_BrainColorSubcortical.nii.gz
-    ${scriptdir}/lpc_lstat.R ${outdir}/template/labels/DKT31/DKT31.csv ${t1dir}/sub-${id}_ses-${mrisess}_DKT31.nii.gz ${metricFile} ${metricFile/_pet.nii.gz/_DKT31}
-    echo $metricFile ${t1dir}/sub-${id}_ses-${mrisess}_DKT31.nii.gz
-    # Get all the Schaefer label stats
-    for parc in 100 200 300 400 500; do
-        for net in 7 17; do
-            labIndex=${outdir}/template/MNI152NLin2009cAsym/tpl-MNI152NLin2009cAsym_atlas-Schaefer2018_desc-${parc}Parcels${net}Networks_dseg.tsv
-            labImage=${t1dir}/sub-${id}_ses-${mrisess}_Schaefer2018_${parc}Parcels${net}Networks.nii.gz
-            ${scriptdir}/lpc_lstat.R ${labIndex} ${labImage} ${metricFile} ${metricFile/_pet.nii.gz/_Schaefer${parc}x${net}}
-            echo $metricFile $labImage
-        done
-    done
+    python pet_quants.py ${metricFile} ${t1dir}
 done
 
 # JSP: need to at least make the template directory writeable; otherwise, if the script crashes out, it can't be deleted.
