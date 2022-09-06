@@ -38,8 +38,12 @@ antsDir = sys.argv[2]
 # Why needed? Supply correct path.
 # On scisub: /project/ftdc_misc/pcook/quants/tpl-TustisonAging2019ANTs/template_description.json
 template = "/template/template_description.json"
+if not os.path.exists(template):
+    template="/project/ftdc_misc/pcook/quants/tpl-TustisonAging2019ANTs/template_description.json"
 # Wherever jsons for different label atlases are stored.
 networkDir = "/atlases"
+if not os.path.exists(networkDir):
+    networkDir = "/project/ftdc_pipeline/data/pet/scripts/penn-pet/atlases"
 
 # Get subject and session based on session output directory path.
 def parsePath( path ):
