@@ -56,7 +56,7 @@ def parsePath( path ):
 
 # Create a custom method for getting both PET and ANTsCT files as input.
 def getInputs(petFile,antsDir):
-    suffix = {"suvr": petFile),
+    suffix = {"suvr": petFile,
         "t1": os.path.join(antsDir,"*ExtractedBrain0N4.nii.gz"),
         "mask": os.path.join(antsDir,"*BrainExtractionMask.nii.gz"),
         "seg": os.path.join(antsDir,"*BrainSegmentation.nii.gz"),
