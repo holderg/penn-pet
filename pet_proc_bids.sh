@@ -154,13 +154,18 @@ refRegion="cb" # PET reference region--for now, cerebellum, can be changed to "w
 # some substantial code additions that Sandy and I can help with.
 pvcMethod=("RVC" "IY") # PVC methods.
 
-# Get template info from ANTsCT container.
-# JSP: If we want to allow users to supply their own template, tempName should be a user-supplied option.
-# Here we are getting the ADNI template from the ANTsCT gear to ensure that it's the same reference used in the
-# ANTsCT stream.
-antsct=/project/ftdc_pipeline/antsct-aging-fw/antsct-aging-fw-0.3.1_0.3.3.sif
-singularity exec -B ${outdir}:/data ${antsct} cp -r /opt/template /data/ # copy template dir to PET output dir
+# # Get template info from ANTsCT container.
+# # JSP: If we want to allow users to supply their own template, tempName should be a user-supplied option.
+# # Here we are getting the ADNI template from the ANTsCT gear to ensure that it's the same reference used in the
+# # ANTsCT stream.
+# antsct=/project/ftdc_pipeline/antsct-aging-fw/antsct-aging-fw-0.3.1_0.3.3.sif
+# singularity exec -B ${outdir}:/data ${antsct} cp -r /opt/template /data/ # copy template dir to PET output dir
+antsct=/project/ftdc_pipeline/antsct-aging
 tempName=${outdir}/template/T_template0_BrainCerebellum.nii.gz
+
+cp -r "${antsct}/template" "${outdir}/data"
+wget --directory-prefix "${outdir}/data/template/MNI152NLin2009cAsym \
+    --content-disposition https://ndownloader.figshare.com/files/26136116 2>/dev/null
 
 # Define session-specific filename variables.
 pfx="${outdir}/sub-${id}_ses-${petsess}_trc-${trc}"
