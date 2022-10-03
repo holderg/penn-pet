@@ -54,6 +54,9 @@ wd=${petdir/sub-${id}\/ses-${petsess}} # Subjects directory
 # Define session-specific filename variables.
 pfx="${outdir}/sub-${id}_ses-${petsess}_trc-${trc}"
 
+# Python environment.
+source /project/ftdc_misc/software/pkg/miniconda3/bin/activate; conda activate flywheel
+
 # Get label statistics for multiple atlases using QuANTs.
 for metricFile in "${pfx}_desc-suvr${mrisess}_pet.nii.gz" "${pfx}_desc-IY${mrisess}_pet.nii.gz" "${pfx}_desc-RVC${mrisess}_pet.nii.gz"; do
     python pet_quants.py ${metricFile} ${t1dir}
