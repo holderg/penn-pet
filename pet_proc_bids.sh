@@ -168,8 +168,11 @@ antsApplyTransforms -d 3 -e 0 -i "${pfx}_desc-RVC${mrisess}_pet.nii.gz" -r ${tem
 # JSP: add warping of SFS-RR-corrected image to template space.
 
 # Get label statistics for multiple atlases using QuANTs.
+source /project/ftdc_misc/software/pkg/miniconda3/bin/activate
+conda activate flywheel
+
 for metricFile in "${pfx}_desc-suvr${mrisess}_pet.nii.gz" "${pfx}_desc-IY${mrisess}_pet.nii.gz" "${pfx}_desc-RVC${mrisess}_pet.nii.gz"; do
-    python pet_quants.py ${metricFile} ${t1dir}
+    python ${scriptdir}/pet_quants.py ${metricFile} ${t1dir}
 done
 
 # JSP: need to at least make the template directory writeable; otherwise, if the script crashes out, it can't be deleted.
