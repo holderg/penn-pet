@@ -179,7 +179,7 @@ q.SetOutputDirectory(petDir)
 # Get tracer from SUVR image name.
 trc = os.path.basename(inputFiles['suvr']).split("_")[2]
 # Output file name.
-oFile = os.path.join(petDir, "sub-" + bidsInfo[0] + "_ses-" + bidsInfo[1] + "_" + trc + "_pet_quants.csv")
+oFile = os.path.join(petDir, os.path.basename(inputFiles['suvr']).replace(".nii.gz","") + "_quants.csv")
 
 # This update function is what does all the work (by calling Summarize).
 q.Update()
