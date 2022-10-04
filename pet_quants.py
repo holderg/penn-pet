@@ -184,6 +184,7 @@ bidsInfo = parsePath(petDir)
 q.SetConstants({"id": bidsInfo[0], "date": bidsInfo[1]})
 q.SetOutputDirectory(petDir)
 # Get tracer from SUVR image name.
+print(inputFiles['suvr'][0])
 trc = os.path.basename(inputFiles['suvr'][0]).split("_")[2]
 # Output file name.
 oFile = os.path.join(petDir, os.path.basename(inputFiles['suvr'][0]).replace(".nii.gz","") + "_quants.csv")

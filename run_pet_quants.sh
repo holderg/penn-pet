@@ -21,6 +21,7 @@ trc=`echo $bn | grep -oE 'trc-[^_]*' | cut -d '-' -f 2` # PET tracer name.
 outdir="/project/ftdc_pipeline/data/pet/sub-${id}/ses-${petsess}"
 
 t1dir=`dirname ${t1Name}`
+t1bn=`basename ${t1Name}`
 mrisess=`echo $t1bn | grep -oE 'ses-[^_]*' | cut -d '-' -f 2` # MRI session label
 wd=${petdir/sub-${id}\/ses-${petsess}} # Subjects directory
 
