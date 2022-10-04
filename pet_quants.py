@@ -50,10 +50,13 @@ if not os.path.exists(networkDir):
 
 
 # Get subject and session based on session output directory path.
-def parsePath( path ):
-    dirParts = os.path.split(path.rstrip('/'))
-    sesTag = dirParts[1]
-    subTag = os.path.split(dirParts[0])[1]
+def parsePath(path):
+    #dirParts = os.path.split(path.rstrip('/'),"/")
+    #sesTag = dirParts[1]
+    #subTag = os.path.split(dirParts[0])[1]
+    dirParts = path.split("/")
+    sesTag = [p for p in dirParts if "ses-" in p][0]
+    subTag = [p for p in dirParts if "sub-" in p][0]
     id = subTag.split('-')[1]
     ses = sesTag.split('-')[1]
     return((id,ses))
@@ -183,7 +186,7 @@ q.SetOutputDirectory(petDir)
 # Get tracer from SUVR image name.
 trc = os.path.basename(inputFiles['suvr'][0]).split("_")[2]
 # Output file name.
-oFile = os.path.join(petDir, os.path.basename(inputFiles['suvr']).replace(".nii.gz","") + "_quants.csv")
+oFile = os.path.join(petDir, os.path.basename(inputFiles['suvr'][0]).replace(".nii.gz","") + "_quants.csv")
 
 # This update function is what does all the work (by calling Summarize).
 q.Update()
