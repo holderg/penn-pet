@@ -4,9 +4,8 @@
 # Note that subject and session labels cannot contain BIDS-incompatible 
 # characters like underscores or periods.
 
-#
-# Initial comment to check pull requests
-# 
+function fwenv { source /project/ftdc_misc/software/pkg/miniconda3/bin/activate; conda activate flywheel; }
+fwenv
 
 # Load required software on PMACS LPC.
 module load ANTs/2.3.5
@@ -167,10 +166,7 @@ antsApplyTransforms -d 3 -e 0 -i "${pfx}_desc-RVC${mrisess}_pet.nii.gz" -r ${tem
 
 # JSP: add warping of SFS-RR-corrected image to template space.
 
-# Get label statistics for multiple atlases using QuANTs.
-source /project/ftdc_misc/software/pkg/miniconda3/bin/activate
-conda activate flywheel
-
+# Run QuANTs
 for metricFile in "${pfx}_desc-suvr${mrisess}_pet.nii.gz" "${pfx}_desc-IY${mrisess}_pet.nii.gz" "${pfx}_desc-RVC${mrisess}_pet.nii.gz"; do
     python ${scriptdir}/pet_quants.py ${metricFile} ${t1dir}
 done
@@ -179,4 +175,4 @@ done
 chgrp -R ftdclpc ${outdir}
 chmod -R 775 ${outdir}
 
-rm -r ${outdir}/template
+rm -rf ${outdir}/template
