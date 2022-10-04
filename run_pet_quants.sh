@@ -4,6 +4,11 @@
 # Note that subject and session labels cannot contain BIDS-incompatible 
 # characters like underscores or periods.
 # Command-line arguments.
+
+function fwenv { source /project/ftdc_misc/software/pkg/miniconda3/bin/activate; conda activate flywheel; }
+
+fwenv
+
 petName=$1 # Absolute path of BIDS-format, attentuation-corrected dynamic PET image
 t1Name=$2 # Absolute path of N4-corrected, skull-on T1 image from ANTsCT output directory
 
@@ -29,8 +34,8 @@ wd=${petdir/sub-${id}\/ses-${petsess}} # Subjects directory
 pfx="${outdir}/sub-${id}_ses-${petsess}_trc-${trc}"
 
 # Python environment.
-source /project/ftdc_misc/software/pkg/miniconda3/bin/activate
-conda activate flywheel
+#source /project/ftdc_misc/software/pkg/miniconda3/bin/activate
+#conda activate flywheel
 
 # Get label statistics for multiple atlases using QuANTs.
 for metricFile in "${pfx}_desc-suvr${mrisess}_pet.nii.gz" "${pfx}_desc-IY${mrisess}_pet.nii.gz" "${pfx}_desc-RVC${mrisess}_pet.nii.gz"; do
