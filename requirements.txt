@@ -1,0 +1,9 @@
+itk
+SimpleITK
+quantsifier
+numpy
+pandas
+os 
+sys
+json
+glob
