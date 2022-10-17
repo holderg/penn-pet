@@ -30,6 +30,10 @@ import sys
 import json
 import glob
 
+os.environ['ITK_GLOBAL_DEFAULT_NUMBER_OF_THREADS'] = str(1)
+os.environ['MKL_NUM_THREADS'] = str(1)
+os.environ['OMP_NUM_THREADS'] = str(1)
+
 petFile = sys.argv[1]
 # This is the single session PET output directory.
 petDir = os.path.dirname(petFile)
