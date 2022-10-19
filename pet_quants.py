@@ -20,19 +20,21 @@
         Tian subcortical atlases
         
 '''
+
+import os 
+
+os.environ['ITK_GLOBAL_DEFAULT_NUMBER_OF_THREADS'] = str(1)
+os.environ['MKL_NUM_THREADS'] = str(1)
+os.environ['OMP_NUM_THREADS'] = str(1)
+
 import itk
 import SimpleITK as sitk
 import quantsifier
 import numpy as np
 import pandas as pd
-import os 
 import sys
 import json
 import glob
-
-os.environ['ITK_GLOBAL_DEFAULT_NUMBER_OF_THREADS'] = str(1)
-os.environ['MKL_NUM_THREADS'] = str(1)
-os.environ['OMP_NUM_THREADS'] = str(1)
 
 petFile = sys.argv[1]
 # This is the single session PET output directory.
