@@ -69,7 +69,7 @@ pvcMethod=("RVC" "IY") # PVC methods.
 # JSP: If we want to allow users to supply their own template, tempName should be a user-supplied option.
 # Here we are getting the ADNI template from the ANTsCT gear to ensure that it's the same reference used in the
 # ANTsCT stream.
-antsct=/project/ftdc_pipeline/antsct-aging-fw/antsct-aging-fw-0.3.1_0.3.3.sif
+antsct=/project/ftdc_pipeline/ftdc-picsl/antsct-aging-0.3.3-p01/antsct-aging-0.3.3-p01.sif
 singularity exec -B ${outdir}:/data ${antsct} cp -r /opt/template /data/ # copy template dir to PET output dir
 tempName=${outdir}/template/T_template0_BrainCerebellum.nii.gz
 
