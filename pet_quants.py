@@ -27,6 +27,7 @@ os.environ['ITK_GLOBAL_DEFAULT_NUMBER_OF_THREADS'] = str(1)
 os.environ['MKL_NUM_THREADS'] = str(1)
 os.environ['OMP_NUM_THREADS'] = str(1)
 
+import argparse
 import itk
 import SimpleITK as sitk
 import quantsifier
@@ -46,19 +47,19 @@ ap.add_argument('-N', '--network-dir', default=None,  action='store', required=T
 ap.add_argument('-o', '--output-dir', default=None,  action='store', required=True, help='output directory')
 ap.add_argument('-v', '--verbose', default=False,  action='store_true', help='verbose')
 
-ap.add_argument('petFile', nargs=1, type=str, default=None, help='PET File Path')
-ap.add_argument('antsDir', nargs=1, type=str, default=None, help='ANTsCT Dir Path')
+ap.add_argument('PetFile', nargs=1, help='PETFilePath')
+ap.add_argument('AntsDir', nargs=1, help='ANTsCTDirPath')
 
 args = ap.parse_args()
 
 networkDir = args.network_dir
 OutputDir = args.output_dir
 
-petFile = args.petFile[0]
+petFile = args.PetFile[0]
 petDir = os.path.dirname(petFile)
 
 # ANTsCT output directory.
-antsDir = args.antsDir[0]
+antsDir = args.AntsDir[0]
 
 # Why needed? Supply correct path.
 # On scisub: /project/ftdc_misc/pcook/quants/tpl-TustisonAging2019ANTs/template_description.json
