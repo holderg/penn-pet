@@ -36,23 +36,37 @@ import sys
 import json
 import glob
 
-petFile = sys.argv[1]
-# This is the single session PET output directory.
+CmdName = os.path.basename(sys.argv[0])
+
+ap = argparse.ArgumentParser()
+
+ap.add_argument('-t', '--template', default=None, action='store', required=True, help='template json file')
+ap.add_argument('-d', '--debug', default=False,  action='store_true', help='debug')
+ap.add_argument('-N', '--network-dir', default=None,  action='store', required=True, help='network directory')
+ap.add_argument('-o', '--output-dir', default=None,  action='store', required=True, help='output directory')
+ap.add_argument('-v', '--verbose', default=False,  action='store_true', help='verbose')
+
+ap.add_argument('petFile', nargs=1, type=str, default=None, help='PET File Path')
+ap.add_argument('antsDir', nargs=1, type=str, default=None, help='ANTsCT Dir Path')
+
+args = ap.parse_args()
+
+networkDir = args.network_dir
+OutputDir = args.output_dir
+
+petFile = args.petFile[0]
 petDir = os.path.dirname(petFile)
-# ANTsCT output directory. Does this take the place of networkDir?
-antsDir = sys.argv[2]
+
+# ANTsCT output directory.
+antsDir = args.antsDir[0]
+
 # Why needed? Supply correct path.
 # On scisub: /project/ftdc_misc/pcook/quants/tpl-TustisonAging2019ANTs/template_description.json
-template = "/template/template_description.json"
+template = args.template
 
-if not os.path.exists(template):
-    template = "/project/ftdc_misc/pcook/quants/tpl-TustisonAging2019ANTs/template_description.json"
-    
 
 # Wherever jsons for different label atlases are stored.
-networkDir = "/atlases"
-if not os.path.exists(networkDir):
-    networkDir = "/project/ftdc_pipeline/data/pet/scripts/penn-pet/atlases"
+
 
 
 # Get subject and session based on session output directory path.
@@ -188,7 +202,7 @@ for n in networks:
 # Add subject and session labels.
 bidsInfo = parsePath(petDir)
 q.SetConstants({"id": bidsInfo[0], "date": bidsInfo[1]})
-q.SetOutputDirectory(petDir)
+q.SetOutputDirectory(OutputDir)
 # Get tracer from SUVR image name.
 print(inputFiles['suvr'][0])
 trc = os.path.basename(inputFiles['suvr'][0]).split("_")[2]
