@@ -6,6 +6,10 @@ OutputDir=${FlywheelDir}/output
 Template=${FlywheelDir}/template_description.json
 NetworkDir=$FlywheelDir/atlases
 
+PetFile=sub-119517_ses-20221010x1514_trc-PI2620_desc-suvr20221010x1656_pet.nii.gz
+Subject=$(echo $PetFile | sed -E 's/^sub-([^_-][^_-]*)[_-].*/\1/')
+Session=$(echo $PetFile | sed -E 's/^.*ses-([^_-][^_-]*)[_-].*/\1/')
+
 [ -d "$OutputDir" ] || mkdir "$OutputDir"
 
-python pet_quants.py -o "$OutputDir" -N $NetworkDir -t $Template ${InputDir}/pet/sub-119517_ses-20221010x1514_trc-PI2620_rec-adyn_pet.nii.gz ${InputDir}/T1
+python pet_quants.py -o "$OutputDir" -N $NetworkDir --subject "$Subject" --session "$Session" -t $Template ${InputDir}/pet/$PetFile ${InputDir}/T1

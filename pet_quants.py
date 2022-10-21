@@ -33,6 +33,7 @@ import SimpleITK as sitk
 import quantsifier
 import numpy as np
 import pandas as pd
+import re
 import sys
 import json
 import glob
@@ -41,10 +42,12 @@ CmdName = os.path.basename(sys.argv[0])
 
 ap = argparse.ArgumentParser()
 
-ap.add_argument('-t', '--template', default=None, action='store', required=True, help='template json file')
 ap.add_argument('-d', '--debug', default=False,  action='store_true', help='debug')
 ap.add_argument('-N', '--network-dir', default=None,  action='store', required=True, help='network directory')
 ap.add_argument('-o', '--output-dir', default=None,  action='store', required=True, help='output directory')
+ap.add_argument('-s', '--subject', default=None, action='store', required=True, help='SubjectID')
+ap.add_argument('-S', '--session', default=None, action='store', required=True, help='SessionID')
+ap.add_argument('-t', '--template', default=None, action='store', required=True, help='template')
 ap.add_argument('-v', '--verbose', default=False,  action='store_true', help='verbose')
 
 ap.add_argument('PetFile', nargs=1, help='PETFilePath')
@@ -72,15 +75,12 @@ template = args.template
 
 # Get subject and session based on session output directory path.
 def parsePath(path):
-    #dirParts = os.path.split(path.rstrip('/'),"/")
-    #sesTag = dirParts[1]
-    #subTag = os.path.split(dirParts[0])[1]
-    dirParts = path.split("/")
-    sesTag = [p for p in dirParts if "ses-" in p][0]
-    subTag = [p for p in dirParts if "sub-" in p][0]
-    id = subTag.split('-')[1]
-    ses = sesTag.split('-')[1]
-    return((id,ses))
+    fn = os.path.basename(path)
+    m = re.search('sub-(?P<subject>[^_-]+)[_-].*ses-(?P<session>[^_-]+)[_-]',fn)
+    if (m):
+        return((m.group('subject'),m.group('session')))
+    print("Could not parse '{}'".format(path),file=sys.stderr)
+    return(None)
 
 # Create a custom method for getting both PET and ANTsCT files as input.
 def getInputs(petFile,antsDir):
@@ -201,8 +201,9 @@ for n in networks:
                 q.AddNetwork(n,img)
 
 # Add subject and session labels.
-bidsInfo = parsePath(petDir)
-q.SetConstants({"id": bidsInfo[0], "date": bidsInfo[1]})
+#bidsInfo = parsePath(petFile)
+
+q.SetConstants({"id": args.subject, "date": args.session})
 q.SetOutputDirectory(OutputDir)
 # Get tracer from SUVR image name.
 print(inputFiles['suvr'][0])
