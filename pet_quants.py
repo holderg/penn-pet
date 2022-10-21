@@ -27,45 +27,60 @@ os.environ['ITK_GLOBAL_DEFAULT_NUMBER_OF_THREADS'] = str(1)
 os.environ['MKL_NUM_THREADS'] = str(1)
 os.environ['OMP_NUM_THREADS'] = str(1)
 
+import argparse
 import itk
 import SimpleITK as sitk
 import quantsifier
 import numpy as np
 import pandas as pd
+import re
 import sys
 import json
 import glob
 
-petFile = sys.argv[1]
-# This is the single session PET output directory.
+CmdName = os.path.basename(sys.argv[0])
+
+ap = argparse.ArgumentParser()
+
+ap.add_argument('-d', '--debug', default=False,  action='store_true', help='debug')
+ap.add_argument('-N', '--network-dir', default=None,  action='store', required=True, help='network directory')
+ap.add_argument('-o', '--output-dir', default=None,  action='store', required=True, help='output directory')
+ap.add_argument('-s', '--subject', default=None, action='store', required=True, help='SubjectID')
+ap.add_argument('-S', '--session', default=None, action='store', required=True, help='SessionID')
+ap.add_argument('-t', '--template', default=None, action='store', required=True, help='template')
+ap.add_argument('-v', '--verbose', default=False,  action='store_true', help='verbose')
+
+ap.add_argument('PetFile', nargs=1, help='PETFilePath')
+ap.add_argument('AntsDir', nargs=1, help='ANTsCTDirPath')
+
+args = ap.parse_args()
+
+networkDir = args.network_dir
+OutputDir = args.output_dir
+
+petFile = args.PetFile[0]
 petDir = os.path.dirname(petFile)
-# ANTsCT output directory. Does this take the place of networkDir?
-antsDir = sys.argv[2]
+
+# ANTsCT output directory.
+antsDir = args.AntsDir[0]
+
 # Why needed? Supply correct path.
 # On scisub: /project/ftdc_misc/pcook/quants/tpl-TustisonAging2019ANTs/template_description.json
-template = "/template/template_description.json"
+template = args.template
 
-if not os.path.exists(template):
-    template = "/project/ftdc_misc/pcook/quants/tpl-TustisonAging2019ANTs/template_description.json"
-    
 
 # Wherever jsons for different label atlases are stored.
-networkDir = "/atlases"
-if not os.path.exists(networkDir):
-    networkDir = "/project/ftdc_pipeline/data/pet/scripts/penn-pet/atlases"
+
 
 
 # Get subject and session based on session output directory path.
 def parsePath(path):
-    #dirParts = os.path.split(path.rstrip('/'),"/")
-    #sesTag = dirParts[1]
-    #subTag = os.path.split(dirParts[0])[1]
-    dirParts = path.split("/")
-    sesTag = [p for p in dirParts if "ses-" in p][0]
-    subTag = [p for p in dirParts if "sub-" in p][0]
-    id = subTag.split('-')[1]
-    ses = sesTag.split('-')[1]
-    return((id,ses))
+    fn = os.path.basename(path)
+    m = re.search('sub-(?P<subject>[^_-]+)[_-].*ses-(?P<session>[^_-]+)[_-]',fn)
+    if (m):
+        return((m.group('subject'),m.group('session')))
+    print("Could not parse '{}'".format(path),file=sys.stderr)
+    return(None)
 
 # Create a custom method for getting both PET and ANTsCT files as input.
 def getInputs(petFile,antsDir):
@@ -186,9 +201,10 @@ for n in networks:
                 q.AddNetwork(n,img)
 
 # Add subject and session labels.
-bidsInfo = parsePath(petDir)
-q.SetConstants({"id": bidsInfo[0], "date": bidsInfo[1]})
-q.SetOutputDirectory(petDir)
+#bidsInfo = parsePath(petFile)
+
+q.SetConstants({"id": args.subject, "date": args.session})
+q.SetOutputDirectory(OutputDir)
 # Get tracer from SUVR image name.
 print(inputFiles['suvr'][0])
 trc = os.path.basename(inputFiles['suvr'][0]).split("_")[2]

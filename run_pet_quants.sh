@@ -5,6 +5,9 @@
 # characters like underscores or periods.
 # Command-line arguments.
 
+Template=/project/ftdc_misc/pcook/quants/tpl-TustisonAging2019ANTs/template_description.json
+NetworkDir=/project/ftdc_pipeline/data/pet/scripts/penn-pet/atlases
+
 function fwenv { source /project/ftdc_misc/software/pkg/miniconda3/bin/activate; conda activate flywheel; }
 
 fwenv
@@ -39,7 +42,7 @@ pfx="${outdir}/sub-${id}_ses-${petsess}_trc-${trc}"
 
 # Get label statistics for multiple atlases using QuANTs.
 for metricFile in "${pfx}_desc-suvr${mrisess}_pet.nii.gz" "${pfx}_desc-IY${mrisess}_pet.nii.gz" "${pfx}_desc-RVC${mrisess}_pet.nii.gz"; do
-    python ${scriptdir}/pet_quants.py ${metricFile} ${t1dir}
+    python ${scriptdir}/pet_quants.py -o "$outdir" -t "$Template" -N "$NetworkDir" ${metricFile} ${t1dir}
 done
 
 # JSP: need to at least make the template directory writeable; otherwise, if the script crashes out, it can't be deleted.
