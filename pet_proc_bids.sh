@@ -168,7 +168,23 @@ antsApplyTransforms -d 3 -e 0 -i "${pfx}_desc-RVC${mrisess}_pet.nii.gz" -r ${tem
 
 # Run QuANTs
 for metricFile in "${pfx}_desc-suvr${mrisess}_pet.nii.gz" "${pfx}_desc-IY${mrisess}_pet.nii.gz" "${pfx}_desc-RVC${mrisess}_pet.nii.gz"; do
-    python ${scriptdir}/pet_quants.py ${metricFile} ${t1dir}
+    python ${scriptdir}/pet_quants.py -N ${scriptdir}/atlases -o ${outdir} -s ${id} -S ${petsess} -t /project/ftdc_misc/pcook/quants/tpl-TustisonAging2019ANTs/template_description.json ${metricFile} ${t1dir}
+    
+#ap.add_argument('-d', '--debug', default=False,  action='store_true', help='debug')
+#ap.add_argument('-N', '--network-dir', default=None,  action='store', required=True, help='network directory')
+#ap.add_argument('-o', '--output-dir', default=None,  action='store', required=True, help='output directory')
+#ap.add_argument('-s', '--subject', default=None, action='store', required=True, help='SubjectID')
+#ap.add_argument('-S', '--session', default=None, action='store', required=True, help='SessionID')
+#ap.add_argument('-t', '--template', default=None, action='store', required=True, help='template')
+#ap.add_argument('-v', '--verbose', default=False,  action='store_true', help='verbose')
+
+#ap.add_argument('PetFile', nargs=1, help='PETFilePath')
+#ap.add_argument('AntsDir', nargs=1, help='ANTsCTDirPath')
+#pet_quants.py: error: the following arguments are required: -N/--network-dir, -o/--output-dir, -s/--subject, -S/--session, -t/--template
+#usage: pet_quants.py [-h] [-d] -N NETWORK_DIR -o OUTPUT_DIR -s SUBJECT -S
+#                     SESSION -t TEMPLATE [-v]
+#                     PetFile AntsDir
+
 done
 
 # JSP: need to at least make the template directory writeable; otherwise, if the script crashes out, it can't be deleted.
