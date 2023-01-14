@@ -95,7 +95,8 @@ fi
 # Motion-correct PET data.
 # Create plot in mm and radians
 if [[ ${runMoco} -eq 1 ]]; then
-    mcflirt -in ${petName} -out ${pfx}_desc-mc_pet.nii.gz -dof 6 -plots
+    echo "Running rigid-body motion correction..."
+    mcflirt -in ${petName} -out ${pfx}_desc-mc_pet.nii.gz -dof 6 -plots -verbose 1
     nvol=`fslinfo ${pfx}_desc-mc_pet.nii.gz | grep dim4 | grep -v pixdim4`
     nvol=${nvol/dim4}
     fslmaths "${pfx}_desc-mc_pet.nii.gz" -Tmean "${pfx}_desc-mean_pet.nii.gz"
