@@ -1,7 +1,7 @@
 #!/bin/bash
 # Just run QuANTs on already pre-processed PET dadta.
 # infile: a two-column csv file, no header row, with the full paths to the
-# unprocessed PET file and the T1 BrainExtraction0N4 image from the ANTsCT
+# unprocessed PET file and the T1 BrainSegmentation0N4 image from the ANTsCT
 # output directory.
 
 infile=${1}
