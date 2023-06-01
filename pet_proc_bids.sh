@@ -59,8 +59,16 @@ regLab=1 # Register label images to PET data?
 doWarps=1 # Warp SUVR images to template space(s)?
 lstat=0 # Save label statistic in CSV format?
 psfwhm=4.9 # FWHM of PET camera point-spread function.
-# JSP: refRegion could also be a user-supplied option. Only cb and wm are recognized.
+
+# JSP: refRegion could also be a user-supplied option. Use cb (i.e., cerebellar grey) for AV1451,
+# whole cerebellum for amyloid tracers, and optionally wm.
 refRegion="cb" # PET reference region--for now, cerebellum, can be changed to "wm".
+if [[ "${trc}" == "AV1451" ]]; then
+    refRegion="cb"
+elif [[ "${trc}" == "FLORBETABEN" ]] | [[ "${trc}" == "FLORBETAPIR" ]]; then
+    refRegion="wholecb"
+fi
+
 # JSP: adding any new partial-volume correction methods (including Shidahara et al.'s SFS-RR algorithm) will require
 # some substantial code additions that Sandy and I can help with.
 pvcMethod=("RVC" "IY") # PVC methods.
@@ -132,10 +140,17 @@ if [[ ${makeSUVR} -eq 1 ]]; then
         antsApplyTransforms -d 3 -e 0 -i ${outdir}/template_reference.nii.gz -r ${t1Name} -o ${outdir}/sub-${id}_ses-${mrisess}_reference.nii.gz -n NearestNeighbor -t "${t1dir}/sub-${id}_ses-${mrisess}_TemplateToSubject1GenericAffine.mat" -t "${t1dir}/sub-${id}_ses-${mrisess}_TemplateToSubject0Warp.nii.gz"
 
         3dcalc -a ${outdir}/sub-${id}_ses-${mrisess}_reference.nii.gz -b ${segName} -c ${t1dir}/sub-${id}_ses-${mrisess}_BrainColorSubcortical.nii.gz -expr 'step(step(a)*equals(b,6)*(equals(c,38)+equals(c,39)))' -overwrite -prefix ${outdir}/sub-${id}_ses-${mrisess}_reference.nii.gz
-        
+
+    elif [[ "${refRegion}" == "wholecb" ]]; then
+    
+    3dcalc -a ${segName} -expr 'equals(a, 6)' -prefix ${outdir}/sub-${id}_ses-${mrisess}_reference.nii.gz -overwrite
+    
+    3dmask_tool -input ${outdir}/sub-${id}_ses-${mrisess}_reference.nii.gz -overwrite -prefix ${outdir}/sub-${id}_ses-${mrisess}_reference.nii.gz -dilate_result -1
+
+    
     elif [[ "${refRegion}" == "wm" ]]; then
 
-        3dcalc -a ${segName} -expr 'equals(a,3)' -prefix ${outdir}/sub-${id}_ses-${mrisess}_reference.nii.gz
+        3dcalc -a ${segName} -expr 'equals(a,3)' -prefix ${outdir}/sub-${id}_ses-${mrisess}_reference.nii.gz -overwrite
 
         3dmask_tool -input ${outdir}/sub-${id}_ses-${mrisess}_reference.nii.gz -overwrite -prefix ${outdir}/sub-${id}_ses-${mrisess}_reference.nii.gz -dilate_result -1
 
