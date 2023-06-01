@@ -26,6 +26,7 @@ import os
 os.environ['ITK_GLOBAL_DEFAULT_NUMBER_OF_THREADS'] = str(1)
 os.environ['MKL_NUM_THREADS'] = str(1)
 os.environ['OMP_NUM_THREADS'] = str(1)
+os.environ['NUMEXPR_NUM_THREADS'] = str(1)
 
 import argparse
 import itk
