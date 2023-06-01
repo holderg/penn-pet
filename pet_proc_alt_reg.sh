@@ -116,7 +116,7 @@ fi
 # Run affine registration between PET and T1 images.
 echo "Running antsRegistration between PET and T1 images..."
 petxfm="${pfx}_desc-rigid${mrisess}_0GenericAffine.mat"
-mpar="MI[ ${t1Name}, ${pfx}_desc-mean_pet.nii.gz, 1, 64, regular, 0.8]"
+mpar="Mattes[ ${t1Name}, ${pfx}_desc-mean_pet.nii.gz, 1, 128, regular, 0.8]"
 cpar="[500x1000x1000x1000,1.e-6,20]"
 spar="3x2x1x0"
 fpar="4x4x2x1"
