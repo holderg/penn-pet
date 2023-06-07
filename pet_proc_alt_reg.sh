@@ -4,6 +4,11 @@
 # Note that subject and session labels cannot contain BIDS-incompatible 
 # characters like underscores or periods.
 
+ITK_GLOBAL_DEFAULT_NUMBER_OF_THREADS=1
+MKL_NUM_THREADS=1
+OMP_NUM_THREADS=1
+NUMEXPR_NUM_THREADS=1
+
 function fwenv { source /project/ftdc_misc/software/pkg/miniconda3/bin/activate; conda activate flywheel; }
 fwenv
 
@@ -15,7 +20,7 @@ module load fsl/6.0.3
 
 # JSP: If we can find an alternative to copying the template and associated labels and warps from the ANTsCT container,
 # we can get rid of the singularity call.
-module load DEV/singularity
+module load singularity/3.8.3
 
 # Command-line arguments.
 petName=$1 # Absolute path of BIDS-format, attentuation-corrected dynamic PET image
