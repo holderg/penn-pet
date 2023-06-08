@@ -70,9 +70,11 @@ psfwhm=4.9 # FWHM of PET camera point-spread function.
 refRegion="cb" # PET reference region--for now, cerebellum, can be changed to "wm".
 if [[ "${trc}" == "AV1451" ]]; then
     refRegion="cb"
-elif [[ "${trc}" == "FLORBETABEN" ]] | [[ "${trc}" == "FLORBETAPIR" ]]; then
+elif [[ "${trc}" == "FLORBETABEN" ]] || [[ "${trc}" == "FLORBETAPIR" ]]; then
     refRegion="wholecb"
 fi
+
+echo "Reference region is ${refRegion}."
 
 # JSP: adding any new partial-volume correction methods (including Shidahara et al.'s SFS-RR algorithm) will require
 # some substantial code additions that Sandy and I can help with.
