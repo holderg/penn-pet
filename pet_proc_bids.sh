@@ -41,6 +41,7 @@ t1Name=$2 # Absolute path of N4-corrected, skull-on T1 image from ANTsCT output 
 # Record job ID.
 # JSP: useful for job monitoring and debugging failed jobs.
 echo "LSB job ID: ${LSB_JOBID}"
+echo "Inputs: ${petName},${t1Name}"
 
 # Parse command-line arguments to get working directory, subject ID, tracer, and PET/MRI session labels.
 petdir=`dirname ${petName}` # PET session input directory
@@ -102,10 +103,18 @@ if [[ ${#flist[@]} -lt 10 ]]; then
     exit 1
 fi
 
+# Symlink input PET image to PET directory.
+if [[ -f ${outdir}/sub-${id}_ses-${petsess}_trc-${trc}_desc-input_pet.nii.gz ]]; then
+    rm ${outdir}/sub-${id}_ses-${petsess}_trc-${trc}_desc-input_pet.nii.gz
+fi
+ln -s ${petName} ${outdir}/sub-${id}_ses-${petsess}_trc-${trc}_desc-input_pet.nii.gz
+
+
 # Also symlink processed T1 to PET directory.
 if [[ ! -f ${outdir}/`basename ${t1Name}` ]]; then
-    ln -s ${t1Name} ${outdir}/
+    rm ${outdir}/`basename ${t1Name}`
 fi
+ln -s ${t1Name} ${outdir}/
 
 # Motion-correct PET data.
 # Create plot in mm and radians
