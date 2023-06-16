@@ -111,7 +111,7 @@ ln -s ${petName} ${outdir}/sub-${id}_ses-${petsess}_trc-${trc}_desc-input_pet.ni
 
 
 # Also symlink processed T1 to PET directory.
-if [[ ! -f ${outdir}/`basename ${t1Name}` ]]; then
+if [[ -f ${outdir}/`basename ${t1Name}` ]]; then
     rm ${outdir}/`basename ${t1Name}`
 fi
 ln -s ${t1Name} ${outdir}/
