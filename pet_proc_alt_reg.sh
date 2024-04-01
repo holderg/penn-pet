@@ -111,7 +111,7 @@ ln -s ${petName} ${outdir}/sub-${id}_ses-${petsess}_trc-${trc}_desc-input_pet.ni
 
 
 # Also symlink processed T1 to PET directory.
-if [[ ! -f ${outdir}/`basename ${t1Name}` ]]; then
+if [[ -f ${outdir}/`basename ${t1Name}` ]]; then
     rm ${outdir}/`basename ${t1Name}`
 fi
 ln -s ${t1Name} ${outdir}/
@@ -129,16 +129,26 @@ fi
 # JSP: Let's try some variations on these antsRegistration parameters.
 # We can assess the fit between PET and T1 at least by visual inspection--can we develop any quantitative metrics?
 # Run affine registration between PET and T1 images.
-echo "Running antsRegistration between PET and T1 images..."
+
 petxfm="${pfx}_desc-rigid${mrisess}_0GenericAffine.mat"
-mpar="Mattes[ ${t1Name}, ${pfx}_desc-mean_pet.nii.gz, 1, 128, regular, 0.8]"
-cpar="[500x1000x1000x1000,1.e-6,20]"
-spar="3x2x1x0"
-fpar="4x4x2x1"
 
-regcmd="antsRegistration -d 3 -m ${mpar} -t Rigid[0.2] -c ${cpar} -s ${spar} -r [ ${t1Name}, ${pfx}_desc-mean_pet.nii.gz, 1 ] -f ${fpar} -l 1 -a 0 -o [ ${pfx}_desc-rigid${mrisess}_, ${pfx}_desc-rigid${mrisess}_pet.nii.gz, ${pfx}_desc-inv${mrisess}_T1w.nii.gz]"
+if [[ ! -f ${outdir}/itk.mat ]]; then
 
-${regcmd}
+    echo "Running antsRegistration between PET and T1 images..."
+    mpar="Mattes[ ${t1Name}, ${pfx}_desc-mean_pet.nii.gz, 1, 128, regular, 0.8]"
+    cpar="[500x1000x1000x1000,1.e-6,20]"
+    spar="3x2x1x0"
+    fpar="4x4x2x1"
+    regcmd="antsRegistration -d 3 -m ${mpar} -t Rigid[0.2] -c ${cpar} -s ${spar} -r [ ${t1Name}, ${pfx}_desc-mean_pet.nii.gz, 1 ] -f ${fpar} -l 1 -a 0 -n BSpline -o [ ${pfx}_desc-rigid${mrisess}_, ${pfx}_desc-rigid${mrisess}_pet.nii.gz, ${pfx}_desc-inv${mrisess}_T1w.nii.gz]"
+
+    ${regcmd}
+
+else
+
+    cp ${outdir}/itk.mat ${petxfm}
+    antsApplyTransforms -d 3 -i ${pfx}_desc-mean_pet.nii.gz -r ${t1Name} -o ${pfx}_desc-rigid${mrisess}_pet.nii.gz -n BSpline -t ${petxfm}
+
+fi
 
 3dcalc -a "${bmaskName}" -b "${pfx}_desc-rigid${mrisess}_pet.nii.gz" -expr 'a*b' -overwrite -prefix "${pfx}_desc-rigid${mrisess}_pet.nii.gz"
 
@@ -165,8 +175,7 @@ if [[ ${makeSUVR} -eq 1 ]]; then
         
     elif [[ "${refRegion}" == "wm" ]]; then
 
-        3dcalc -a ${segName} -expr 'equals(a,3)' -prefix ${outdir}/sub-${id}_ses-${mrisess}_reference.nii.gz
-
+	3dcalc -a ${segName} -expr 'equals(a,3)' -prefix ${outdir}/sub-${id}_ses-${mrisess}_reference.nii.gz -overwrite
         3dmask_tool -input ${outdir}/sub-${id}_ses-${mrisess}_reference.nii.gz -overwrite -prefix ${outdir}/sub-${id}_ses-${mrisess}_reference.nii.gz -dilate_result -1
 
     fi
