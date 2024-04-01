@@ -4,10 +4,10 @@
 # Note that subject and session labels cannot contain BIDS-incompatible 
 # characters like underscores or periods.
 
-ITK_GLOBAL_DEFAULT_NUMBER_OF_THREADS=1
-MKL_NUM_THREADS=1
-OMP_NUM_THREADS=1
-NUMEXPR_NUM_THREADS=1
+export SINGULARITYENV_ITK_GLOBAL_DEFAULT_NUMBER_OF_THREADS=1
+export MKL_NUM_THREADS=1
+export OMP_NUM_THREADS=1
+export NUMEXPR_NUM_THREADS=1
 
 function fwenv { source /project/ftdc_misc/software/pkg/miniconda3/bin/activate; conda activate flywheel; }
 fwenv
