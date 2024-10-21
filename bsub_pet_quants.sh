@@ -14,8 +14,8 @@ cat ${infile} | while IFS="," read f t1; do
 	petsess=${fp[1]}
 	wd=/project/ftdc_pipeline/data/pet/${subj}/${petsess}
 	if [[ ! -d ${wd} ]]; then mkdir -p ${wd}; fi
-	cmd="bsub -J pet_quants_${subj}_${petsess} -o ${wd}/%J.stdout -e ${wd}/%J.stderr ${scriptdir}/run_pet_quants.sh ${f} ${t1}"
-	echo $cmd
+	cmd="bsub -J pet_quants_${subj}_${petsess} -o ${wd}/pet_quants_%J_log.txt ${scriptdir}/run_pet_quants.sh ${f} ${t1}"
+        echo $cmd
 	$cmd
 done
 

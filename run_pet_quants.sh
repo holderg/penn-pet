@@ -5,21 +5,22 @@
 # characters like underscores or periods.
 # Command-line arguments.
 
-Template=/project/ftdc_misc/pcook/quants/tpl-TustisonAging2019ANTs/template_description.json
-NetworkDir=/project/ftdc_pipeline/data/pet/scripts/penn-pet/atlases
-
-#function fwenv { source /project/ftdc_misc/software/pkg/miniconda3/bin/activate; conda activate flywheel; }
-#fwenv
-
+module unload python/3.10
 module load python/3.9
 
+export PYTHONPATH=/project/ftdc_misc/jtduda/quants/QuANTs/python/quants:/project/ftdc_volumetric/fw_bids/scripts/Flywheel_python_sdk
 petName=$1 # Absolute path of BIDS-format, attentuation-corrected dynamic PET image
 t1Name=$2 # Absolute path of N4-corrected, skull-on T1 image from ANTsCT output directory
+NetworkDir=/project/ftdc_misc/jtduda/quants/QuANTs
+
 
 # Record job ID.
 # JSP: useful for job monitoring and debugging failed jobs.
 echo "LSB job ID: ${LSB_JOBID}"
 scriptdir=`dirname $0` # Location of this script
+
+template="/project/ftdc_misc/pcook/quants/tpl-TustisonAging2019ANTs/template_description.json"
+adir="/project/ftdc_misc/jtduda/quants/atlases/"
 
 # Parse command-line arguments to get working directory, subject ID, tracer, and PET/MRI session labels.
 petdir=`dirname ${petName}` # PET session input directory
@@ -37,13 +38,10 @@ wd=${petdir/sub-${id}\/ses-${petsess}} # Subjects directory
 # Define session-specific filename variables.
 pfx="${outdir}/sub-${id}_ses-${petsess}_trc-${trc}"
 
-# Python environment.
-#source /project/ftdc_misc/software/pkg/miniconda3/bin/activate
-#conda activate flywheel
-
 # Get label statistics for multiple atlases using QuANTs.
 for metricFile in "${pfx}_desc-suvr${mrisess}_pet.nii.gz" "${pfx}_desc-IY${mrisess}_pet.nii.gz" "${pfx}_desc-RVC${mrisess}_pet.nii.gz"; do
-    python ${scriptdir}/pet_quants.py -N ${scriptdir}/atlases -o ${outdir} -s ${id} -S ${petsess} -t /project/ftdc_misc/pcook/quants/tpl-TustisonAging2019ANTs/template_description.json ${metricFile} ${t1dir}
+    outFile=${metricFile/.nii.gz/_quants.csv}
+    python ${scriptdir}/pet_quants.py --template=$template --atlas_dir=${NetworkDir}/atlases --atlas_images=${adir} --output=${outFile} -s ${id} -S ${petsess} ${metricFile} ${t1dir}
 done
 
 # JSP: need to at least make the template directory writeable; otherwise, if the script crashes out, it can't be deleted.
