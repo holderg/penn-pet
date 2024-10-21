@@ -10,10 +10,9 @@ export MKL_NUM_THREADS=1
 export OMP_NUM_THREADS=1
 export NUMEXPR_NUM_THREADS=1
 
-function fwenv { source /project/ftdc_misc/software/pkg/miniconda3/bin/activate; conda activate flywheel; }
-fwenv
-
 # Load required software on PMACS LPC.
+module unload python/3.10
+module load python/3.9
 module load ANTs/2.3.5
 module load afni_openmp/20.1
 module load PETPVC/1.2.10
