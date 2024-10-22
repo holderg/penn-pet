@@ -27,18 +27,6 @@ module load singularity/3.8.3
 petName=$1 # Absolute path of BIDS-format, attentuation-corrected dynamic PET image
 t1Name=$2 # Absolute path of N4-corrected, skull-on T1 image from ANTsCT output directory
 
-# JSP: required files include:
-# petName=$1 # Absolute path of BIDS-format, attentuation-corrected dynamic PET image
-# t1Name=$2 # Absolute path of N4-corrected, skull-on T1 image from ANTsCT output directory
-# bmaskName=${t1dir}/sub-${id}_ses-${mrisess}_BrainExtractionMask.nii.gz
-# segName=${t1dir}/sub-${id}_ses-${mrisess}_BrainSegmentation.nii.gz
-# T1-template transforms:
-#   ${t1dir}/*_SubjectToTemplate1Warp.nii.gz
-#   ${t1dir}/*_SubjectToTemplate0GenericAffine.mat`
-#   ${t1dir}/*_TemplateToSubject0Warp.nii.gz
-#   ${t1dir}/*_TemplateToSubject1GenericAffine.mat`
-# Tissue probability posterior images: ${t1dir}/*Posteriors[1-6]nii.gz 
-
 # Record job ID.
 # JSP: useful for job monitoring and debugging failed jobs.
 echo "LSB job ID: ${LSB_JOBID}"
@@ -57,6 +45,10 @@ scriptdir=`dirname $0` # Location of this script
 # JSP: note that output directory is specified here!
 outdir="/project/ftdc_pipeline/data/pet/sub-${id}/ses-${petsess}"
 if [[ ! -d ${outdir} ]]; then mkdir -p ${outdir}; fi
+
+# QuANTs variables
+NetworkDir=/project/ftdc_misc/jtduda/quants/QuANTs
+adir="/project/ftdc_misc/jtduda/quants/atlases/"
 
 # Some processing defaults
 # JSP: I don't think we'll want to alter any of these defaults, but we could allow the user to set all of these options.
@@ -201,8 +193,10 @@ antsApplyTransforms -d 3 -e 0 -i "${pfx}_desc-RVC${mrisess}_pet.nii.gz" -r ${tem
 
 # Run QuANTs
 for metricFile in "${pfx}_desc-suvr${mrisess}_pet.nii.gz" "${pfx}_desc-IY${mrisess}_pet.nii.gz" "${pfx}_desc-RVC${mrisess}_pet.nii.gz"; do
-    python ${scriptdir}/pet_quants.py -N ${scriptdir}/atlases -o ${outdir} -s ${id} -S ${petsess} -t /project/ftdc_misc/pcook/quants/tpl-TustisonAging2019ANTs/template_description.json ${metricFile} ${t1dir}
-    
+
+    outFile=${metricFile/.nii.gz/_quants.csv}
+    python ${scriptdir}/pet_quants.py --template=$template --atlas_dir=${NetworkDir}/atlases --atlas_images=${adir} --output=${outFile} -s ${id} -S ${petsess} ${metricFile} ${t1dir}
+
 #ap.add_argument('-d', '--debug', default=False,  action='store_true', help='debug')
 #ap.add_argument('-N', '--network-dir', default=None,  action='store', required=True, help='network directory')
 #ap.add_argument('-o', '--output-dir', default=None,  action='store', required=True, help='output directory')

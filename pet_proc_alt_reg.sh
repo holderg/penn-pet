@@ -58,6 +58,10 @@ scriptdir=`dirname $0` # Location of this script
 outdir="/project/ftdc_pipeline/data/pet/sub-${id}/ses-${petsess}"
 if [[ ! -d ${outdir} ]]; then mkdir -p ${outdir}; fi
 
+# QuANTs variables
+NetworkDir=/project/ftdc_misc/jtduda/quants/QuANTs
+adir="/project/ftdc_misc/jtduda/quants/atlases/"
+
 # Some processing defaults
 # JSP: I don't think we'll want to alter any of these defaults, but we could allow the user to set all of these options.
 runMoco=1 # Run motion correction?
@@ -209,8 +213,10 @@ antsApplyTransforms -d 3 -e 0 -i "${pfx}_desc-RVC${mrisess}_pet.nii.gz" -r ${tem
 
 # Run QuANTs
 for metricFile in "${pfx}_desc-suvr${mrisess}_pet.nii.gz" "${pfx}_desc-IY${mrisess}_pet.nii.gz" "${pfx}_desc-RVC${mrisess}_pet.nii.gz"; do
-    python ${scriptdir}/pet_quants.py -N ${scriptdir}/atlases -o ${outdir} -s ${id} -S ${petsess} -t /project/ftdc_misc/pcook/quants/tpl-TustisonAging2019ANTs/template_description.json ${metricFile} ${t1dir}
-    
+
+    outFile=${metricFile/.nii.gz/_quants.csv}
+    python ${scriptdir}/pet_quants.py --template=$template --atlas_dir=${NetworkDir}/atlases --atlas_images=${adir} --output=${outFile} -s ${id} -S ${petsess} ${metricFile} ${t1dir}
+ 
 #ap.add_argument('-d', '--debug', default=False,  action='store_true', help='debug')
 #ap.add_argument('-N', '--network-dir', default=None,  action='store', required=True, help='network directory')
 #ap.add_argument('-o', '--output-dir', default=None,  action='store', required=True, help='output directory')
