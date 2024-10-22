@@ -9,6 +9,7 @@ export ITK_GLOBAL_DEFAULT_NUMBER_OF_THREADS=1
 export MKL_NUM_THREADS=1
 export OMP_NUM_THREADS=1
 export NUMEXPR_NUM_THREADS=1
+export PYTHONPATH=/project/ftdc_misc/jtduda/quants/QuANTs/python/quants:/project/ftdc_volumetric/fw_bids/scripts/Flywheel_python_sdk
 
 # Load required software on PMACS LPC.
 module unload python/3.10
