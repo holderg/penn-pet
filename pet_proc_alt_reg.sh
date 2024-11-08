@@ -11,6 +11,9 @@ export OMP_NUM_THREADS=1
 export NUMEXPR_NUM_THREADS=1
 export PYTHONPATH=/project/ftdc_misc/jtduda/quants/QuANTs/python/quants:/project/ftdc_volumetric/fw_bids/scripts/Flywheel_python_sdk
 
+#function fwenv { source /project/ftdc_misc/software/pkg/miniconda3/bin/activate; conda activate flywheel; }
+#fwenv
+
 # Load required software on PMACS LPC.
 module unload python/3.10
 module load python/3.9
@@ -18,6 +21,9 @@ module load ANTs/2.3.5
 module load afni_openmp/20.1
 module load PETPVC/1.2.10
 module load fsl/6.0.3
+module unload python/3.10
+module load python/3.9
+module load c3d/20191022
 
 # JSP: If we can find an alternative to copying the template and associated labels and warps from the ANTsCT container,
 # we can get rid of the singularity call.
@@ -43,6 +49,11 @@ t1Name=$2 # Absolute path of N4-corrected, skull-on T1 image from ANTsCT output 
 # JSP: useful for job monitoring and debugging failed jobs.
 echo "LSB job ID: ${LSB_JOBID}"
 echo "Inputs: ${petName},${t1Name}"
+
+# Paths for QuANTs
+template="/project/ftdc_misc/pcook/quants/tpl-TustisonAging2019ANTs/template_description.json"
+adir="/project/ftdc_misc/jtduda/quants/atlases/"
+NetworkDir=/project/ftdc_misc/jtduda/quants/QuANTs
 
 # Parse command-line arguments to get working directory, subject ID, tracer, and PET/MRI session labels.
 petdir=`dirname ${petName}` # PET session input directory
@@ -134,10 +145,15 @@ fi
 # JSP: Let's try some variations on these antsRegistration parameters.
 # We can assess the fit between PET and T1 at least by visual inspection--can we develop any quantitative metrics?
 # Run affine registration between PET and T1 images.
+# Instructions for ITK manual option:
+# 1. Register images in ITK-Snap (either use automated or manual regsitration.
+# 2. Save out transform. It will be ASCII.
+# 3. Use c3d_affine_tool to convert to a binary file, e.g.:
+#    c3d_affine_tool itk_manual.mat -oitk itk.mat
 
 petxfm="${pfx}_desc-rigid${mrisess}_0GenericAffine.mat"
 
-if [[ ! -f ${outdir}/itk.mat ]]; then
+if [[ ! -f ${outdir}/itk.txt ]]; then
 
     echo "Running antsRegistration between PET and T1 images..."
     mpar="Mattes[ ${t1Name}, ${pfx}_desc-mean_pet.nii.gz, 1, 128, regular, 0.8]"
@@ -150,7 +166,8 @@ if [[ ! -f ${outdir}/itk.mat ]]; then
 
 else
 
-    cp ${outdir}/itk.mat ${petxfm}
+    #cp ${outdir}/itk.mat ${petxfm}
+    c3d_affine_tool ${outdir}/itk.txt -oitk ${petxfm}
     antsApplyTransforms -d 3 -i ${pfx}_desc-mean_pet.nii.gz -r ${t1Name} -o ${pfx}_desc-rigid${mrisess}_pet.nii.gz -n BSpline -t ${petxfm}
 
 fi
@@ -177,10 +194,12 @@ if [[ ${makeSUVR} -eq 1 ]]; then
     3dcalc -a ${segName} -expr 'equals(a, 6)' -prefix ${outdir}/sub-${id}_ses-${mrisess}_reference.nii.gz -overwrite
     
     3dmask_tool -input ${outdir}/sub-${id}_ses-${mrisess}_reference.nii.gz -overwrite -prefix ${outdir}/sub-${id}_ses-${mrisess}_reference.nii.gz -dilate_result -1
-        
+
+    
     elif [[ "${refRegion}" == "wm" ]]; then
 
-	3dcalc -a ${segName} -expr 'equals(a,3)' -prefix ${outdir}/sub-${id}_ses-${mrisess}_reference.nii.gz -overwrite
+        3dcalc -a ${segName} -expr 'equals(a,3)' -prefix ${outdir}/sub-${id}_ses-${mrisess}_reference.nii.gz -overwrite
+
         3dmask_tool -input ${outdir}/sub-${id}_ses-${mrisess}_reference.nii.gz -overwrite -prefix ${outdir}/sub-${id}_ses-${mrisess}_reference.nii.gz -dilate_result -1
 
     fi
@@ -211,27 +230,12 @@ antsApplyTransforms -d 3 -e 0 -i "${pfx}_desc-RVC${mrisess}_pet.nii.gz" -r ${tem
 
 # JSP: add warping of SFS-RR-corrected image to template space.
 
-# Run QuANTs
+# Get label statistics for multiple atlases using QuANTs.
 for metricFile in "${pfx}_desc-suvr${mrisess}_pet.nii.gz" "${pfx}_desc-IY${mrisess}_pet.nii.gz" "${pfx}_desc-RVC${mrisess}_pet.nii.gz"; do
 
     outFile=${metricFile/.nii.gz/_quants.csv}
     python ${scriptdir}/pet_quants.py --template=$template --atlas_dir=${NetworkDir}/atlases --atlas_images=${adir} --output=${outFile} -s ${id} -S ${petsess} ${metricFile} ${t1dir}
  
-#ap.add_argument('-d', '--debug', default=False,  action='store_true', help='debug')
-#ap.add_argument('-N', '--network-dir', default=None,  action='store', required=True, help='network directory')
-#ap.add_argument('-o', '--output-dir', default=None,  action='store', required=True, help='output directory')
-#ap.add_argument('-s', '--subject', default=None, action='store', required=True, help='SubjectID')
-#ap.add_argument('-S', '--session', default=None, action='store', required=True, help='SessionID')
-#ap.add_argument('-t', '--template', default=None, action='store', required=True, help='template')
-#ap.add_argument('-v', '--verbose', default=False,  action='store_true', help='verbose')
-
-#ap.add_argument('PetFile', nargs=1, help='PETFilePath')
-#ap.add_argument('AntsDir', nargs=1, help='ANTsCTDirPath')
-#pet_quants.py: error: the following arguments are required: -N/--network-dir, -o/--output-dir, -s/--subject, -S/--session, -t/--template
-#usage: pet_quants.py [-h] [-d] -N NETWORK_DIR -o OUTPUT_DIR -s SUBJECT -S
-#                     SESSION -t TEMPLATE [-v]
-#                     PetFile AntsDir
-
 done
 
 # JSP: need to at least make the template directory writeable; otherwise, if the script crashes out, it can't be deleted.
