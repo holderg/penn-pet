@@ -18,6 +18,9 @@ module load ANTs/2.3.5
 module load afni_openmp/20.1
 module load PETPVC/1.2.10
 module load fsl/6.0.3
+module unload python/3.10
+module load python/3.9
+module load c3d/20191022
 
 # JSP: If we can find an alternative to copying the template and associated labels and warps from the ANTsCT container,
 # we can get rid of the singularity call.
@@ -31,6 +34,11 @@ t1Name=$2 # Absolute path of N4-corrected, skull-on T1 image from ANTsCT output 
 # JSP: useful for job monitoring and debugging failed jobs.
 echo "LSB job ID: ${LSB_JOBID}"
 echo "Inputs: ${petName},${t1Name}"
+
+# Paths for QuANTs
+template="/project/ftdc_misc/pcook/quants/tpl-TustisonAging2019ANTs/template_description.json"
+adir="/project/ftdc_misc/jtduda/quants/atlases/"
+NetworkDir=/project/ftdc_misc/jtduda/quants/QuANTs
 
 # Parse command-line arguments to get working directory, subject ID, tracer, and PET/MRI session labels.
 petdir=`dirname ${petName}` # PET session input directory
@@ -191,26 +199,11 @@ antsApplyTransforms -d 3 -e 0 -i "${pfx}_desc-RVC${mrisess}_pet.nii.gz" -r ${tem
 
 # JSP: add warping of SFS-RR-corrected image to template space.
 
-# Run QuANTs
+# Get label statistics for multiple atlases using QuANTs.
 for metricFile in "${pfx}_desc-suvr${mrisess}_pet.nii.gz" "${pfx}_desc-IY${mrisess}_pet.nii.gz" "${pfx}_desc-RVC${mrisess}_pet.nii.gz"; do
 
     outFile=${metricFile/.nii.gz/_quants.csv}
     python ${scriptdir}/pet_quants.py --template=$template --atlas_dir=${NetworkDir}/atlases --atlas_images=${adir} --output=${outFile} -s ${id} -S ${petsess} ${metricFile} ${t1dir}
-
-#ap.add_argument('-d', '--debug', default=False,  action='store_true', help='debug')
-#ap.add_argument('-N', '--network-dir', default=None,  action='store', required=True, help='network directory')
-#ap.add_argument('-o', '--output-dir', default=None,  action='store', required=True, help='output directory')
-#ap.add_argument('-s', '--subject', default=None, action='store', required=True, help='SubjectID')
-#ap.add_argument('-S', '--session', default=None, action='store', required=True, help='SessionID')
-#ap.add_argument('-t', '--template', default=None, action='store', required=True, help='template')
-#ap.add_argument('-v', '--verbose', default=False,  action='store_true', help='verbose')
-
-#ap.add_argument('PetFile', nargs=1, help='PETFilePath')
-#ap.add_argument('AntsDir', nargs=1, help='ANTsCTDirPath')
-#pet_quants.py: error: the following arguments are required: -N/--network-dir, -o/--output-dir, -s/--subject, -S/--session, -t/--template
-#usage: pet_quants.py [-h] [-d] -N NETWORK_DIR -o OUTPUT_DIR -s SUBJECT -S
-#                     SESSION -t TEMPLATE [-v]
-#                     PetFile AntsDir
 
 done
 
